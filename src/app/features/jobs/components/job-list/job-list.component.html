@@ -1,0 +1,56 @@
+@let res = jobResponse();
+
+@if (res.loading) {
+<jb-loader />
+}
+@else if (res.error) {
+<div class="error">{{ res.error }}</div>
+}
+@else if (res.success) {
+<div class="job-list-container">
+  <!-- Filters -->
+  <jb-job-filters [jobs]="jobFilterService.paginatedJobs()" (filtersChanged)="onFiltersChanged($event)">
+  </jb-job-filters>
+
+  <!-- Jobs Content -->
+  <div class="jobs-content">
+    <div class="jobs-header">
+      <h1>Available Jobs</h1>
+      <span class="jobs-count">{{jobFilterService.jobsCount() }} jobs found</span>
+    </div>
+
+    <div class="jobs-grid">
+      @if (jobFilterService.paginatedJobs().length > 0) {
+      @for (job of jobFilterService.paginatedJobs(); track job.id) {
+      <jb-job-card [job]="job" [showActions]="true" (cardClick)="onCardClick($event)"
+        (applyClick)="onApplyClick($event)" (saveClick)="onSaveClick($event)">
+      </jb-job-card>
+      }
+      }
+      @else {
+      <div class="no-results">
+        <p>No jobs found matching your filters.</p>
+        <p class="hint">Try adjusting your filters to see more results.</p>
+      </div>
+      }
+    </div>
+
+    <!-- Paginator -->
+    @if (jobFilterService.jobsCount()>0) {
+    <mat-paginator [length]="jobFilterService.jobsCount()" [pageSize]="jobFilterService.pagination().pageSize"
+      [pageSizeOptions]="[5, 10, 25, 50]" [pageIndex]="jobFilterService.pagination().pageIndex"
+      (page)="onPageChange($event)" aria-label="Select page" class="jobs-paginator">
+    </mat-paginator>
+    }
+  </div>
+</div>
+}
+
+<!-- Debugging block -->
+<div class="test">
+  [for test]
+  <div>total jobs = {{ jobFilterService.jobsCount() }}</div>
+  <!-- <div>filtered jobs = {{jobFilterService.filteredJobs() | json}}</div>
+  <div>paginated jobs = {{jobFilterService.paginatedJobs() |json }}</div> -->
+  <div>pagination = {{jobFilterService.pagination() | json}}</div>
+</div>

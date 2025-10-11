@@ -1,0 +1,84 @@
+@let currentJob = job();
+<!-- <div class="test">
+  {{currentJob | json}}
+</div> -->
+@if (currentJob) {
+<mat-card class="job-card" appearance="outlined" (click)="onCardClick()" tabindex="0" role="button"
+  [attr.aria-label]="'View details for ' + currentJob.title + ' at ' + currentJob.companyName">
+
+  <mat-card-header>
+    <div class="company-logo" mat-card-avatar>
+      @if (currentJob.companyLogo) {
+      <img [src]="currentJob.companyLogo" [alt]="currentJob.companyName + ' logo'" />
+      } @else {
+      <div class="logo-placeholder">
+        <mat-icon>business</mat-icon>
+      </div>
+      }
+    </div>
+
+    <mat-card-title>{{ currentJob.title }}</mat-card-title>
+    <mat-card-subtitle>
+      <span class="company-name">{{ currentJob.companyName }}</span>
+      <span class="separator">•</span>
+      <span class="location">
+        <mat-icon class="location-icon">location_on</mat-icon>
+        {{ getLocationString() }}
+      </span>
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <p class="job-description">{{ currentJob.description }}</p>
+
+    <div class="job-details">
+      @if (currentJob.salary) {
+      <div class="detail-item">
+        <mat-icon>payments</mat-icon>
+        <span>{{ currentJob.salary | salaryFormat }}</span>
+      </div>
+      }
+
+      <div class="detail-item">
+        <mat-icon>work</mat-icon>
+        <span>{{ getJobTypeLabel() }}</span>
+      </div>
+
+      @if (currentJob.experienceLevel) {
+      <div class="detail-item">
+        <mat-icon>trending_up</mat-icon>
+        <span>{{ currentJob.experienceLevel | titlecase }}</span>
+      </div>
+      }
+
+      <div class="detail-item">
+        <mat-icon>schedule</mat-icon>
+        <span>{{ currentJob.createdAt | timeAgo }}</span>
+      </div>
+    </div>
+  </mat-card-content>
+
+  <mat-card-footer class="job-card-footer">
+    <mat-chip-set aria-label="Job skills and tags" class="skills-chips">
+      @for (skill of currentJob.skills.slice(0, 5); track skill) {
+      <mat-chip>{{ skill }}</mat-chip>
+      }
+      @if (currentJob.skills.length > 5) {
+      <mat-chip class="more-chip">+{{ currentJob.skills.length - 5 }} more</mat-chip>
+      }
+    </mat-chip-set>
+
+    @if (showActions()) {
+    <div class="card-actions">
+      <button mat-icon-button (click)="onSaveClick($event)" aria-label="Save job" matTooltip="Save for later">
+        <mat-icon>bookmark_border</mat-icon>
+      </button>
+
+      <button mat-raised-button color="primary" (click)="onApplyClick($event)" aria-label="Apply to job">
+        Apply Now
+      </button>
+    </div>
+    }
+  </mat-card-footer>
+</mat-card>
+}

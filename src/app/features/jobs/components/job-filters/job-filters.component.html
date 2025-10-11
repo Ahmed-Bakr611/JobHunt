@@ -1,0 +1,78 @@
+<aside class="filters-sidebar">
+  <div class="filters-header">
+    <h2>Filters</h2>
+    <button mat-button color="primary" (click)="clearAllFilters()">Clear All</button>
+  </div>
+
+  <div class="filters-content">
+    @for (group of filterGroups(); track group.key) {
+    <mat-expansion-panel [expanded]="group.expanded">
+      <mat-expansion-panel-header>
+        <mat-panel-title>{{ group.title }}</mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="filter-options">
+        @for (option of group.options; track option.value) {
+        <div class="filter-option">
+          <mat-checkbox [checked]="option.selected" (change)="onFilterChange(group.key, option.value, $event.checked)">
+            <span class="option-label">{{ option.label }}</span>
+            <span class="option-count">({{ option.count }})</span>
+          </mat-checkbox>
+        </div>
+        }
+      </div>
+    </mat-expansion-panel>
+    }
+
+    <!-- Salary Range Filter -->
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Salary Range</mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="salary-filter">
+        <mat-form-field appearance="outline">
+          <mat-label>Min Salary</mat-label>
+          <input matInput type="number" [(ngModel)]="salaryMin" (ngModelChange)="onSalaryInputChange()"
+            placeholder="0" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Max Salary</mat-label>
+          <input matInput type="number" [(ngModel)]="salaryMax" (ngModelChange)="onSalaryInputChange()"
+            placeholder="Any" />
+        </mat-form-field>
+      </div>
+    </mat-expansion-panel>
+
+    <!-- Location Filter -->
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Location Options</mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="filter-options">
+        <div class="filter-option">
+          <mat-checkbox [checked]="remoteOnly()" (change)="onRemoteChange($event.checked)">
+            <span class="option-label">Remote Only</span>
+            <span class="option-count">({{ remoteCount() }})</span>
+          </mat-checkbox>
+        </div>
+        <div class="filter-option">
+          <mat-checkbox [checked]="hybridOnly()" (change)="onHybridChange($event.checked)">
+            <span class="option-label">Hybrid</span>
+            <span class="option-count">({{ hybridCount() }})</span>
+          </mat-checkbox>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </div>
+
+  <!-- Apply Filters Button -->
+  <div class="filters-footer">
+    <button mat-raised-button color="primary" (click)="applyFilters()" [disabled]="!hasUnappliedChanges()"
+      class="apply-button">
+      Apply Filters
+    </button>
+  </div>
+</aside>

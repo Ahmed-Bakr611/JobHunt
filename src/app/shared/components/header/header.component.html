@@ -1,0 +1,26 @@
+<mat-toolbar color="primary">
+  <a mat-button class="logo" routerLink="/jobs" routerLinkActive="active">
+    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon>
+    <span class="brand">Jobly</span>
+  </a>
+
+
+  <span class="spacer"></span>
+
+  <a mat-button routerLink="/jobs" routerLinkActive="active">Jobs</a>
+
+  @if (auth.isAuthenticated()) {
+  <button mat-button [matMenuTriggerFor]="menu">
+    <mat-icon>account_circle</mat-icon>
+    {{ auth.currentUser() ? auth.currentUser()?.displayName : 'Profile' }}
+  </button>
+
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="goToProfile()">Profile</button>
+    <button mat-menu-item (click)="signOut()">Logout</button>
+  </mat-menu>
+  } @else {
+  <a mat-button routerLink="/auth/login" routerLinkActive="active">Login</a>
+  <a mat-stroked-button color="accent" routerLink="/auth/register" routerLinkActive="active">Register</a>
+  }
+</mat-toolbar>

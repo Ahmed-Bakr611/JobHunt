@@ -1,59 +1,194 @@
-# JobHunt
+jobly/
+├── src/
+│ ├── app/
+│ │ ├── core/ # Singleton services, guards
+│ │ │ ├── guards/
+│ │ │ │ ├── auth.guard.ts
+│ │ │ │ ├── role.guard.ts
+│ │ │ │ └── unsaved-changes.guard.ts
+│ │ │ ├── interceptors/
+│ │ │ │ ├── auth.interceptor.ts
+│ │ │ │ └── error.interceptor.ts
+│ │ │ └── services/
+│ │ │ ├── auth.service.ts
+│ │ │ ├── notification.service.ts
+│ │ │ └── storage.service.ts
+│ │ │
+│ │ ├── shared/ # Shared components, directives, pipes
+│ │ │ ├── components/
+│ │ │ │ ├── header/
+│ │ │ │ ├── footer/
+│ │ │ │ ├── loader/
+│ │ │ │ └── confirmation-dialog/
+│ │ │ ├── directives/
+│ │ │ │ ├── auto-focus.directive.ts
+│ │ │ │ ├── debounce-click.directive.ts
+│ │ │ │ ├── img-fallback.directive.ts
+│ │ │ │ └── permission.directive.ts
+│ │ │ ├── pipes/
+│ │ │ │ ├── time-ago.pipe.ts
+│ │ │ │ ├── truncate.pipe.ts
+│ │ │ │ ├── salary-format.pipe.ts
+│ │ │ │ └── filter.pipe.ts
+│ │ │ └── models/
+│ │ │ ├── user.model.ts
+│ │ │ ├── job.model.ts
+│ │ │ └── application.model.ts
+│ │ │
+│ │ ├── features/ # Feature modules
+│ │ │ ├── auth/
+│ │ │ │ ├── components/
+│ │ │ │ │ ├── login/
+│ │ │ │ │ ├── register/
+│ │ │ │ │ └── role-selection/
+│ │ │ │ ├── auth.routes.ts
+│ │ │ │ └── auth.module.ts
+│ │ │ │
+│ │ │ ├── jobs/ # Job seeker features
+│ │ │ │ ├── components/
+│ │ │ │ │ ├── job-list/
+│ │ │ │ │ ├── job-detail/
+│ │ │ │ │ ├── job-card/
+│ │ │ │ │ └── job-filters/
+│ │ │ │ ├── services/
+│ │ │ │ │ └── job.service.ts
+│ │ │ │ ├── jobs.routes.ts
+│ │ │ │ └── jobs.module.ts
+│ │ │ │
+│ │ │ ├── applications/ # Job applications
+│ │ │ │ ├── components/
+│ │ │ │ │ ├── application-form/
+│ │ │ │ │ ├── my-applications/
+│ │ │ │ │ └── application-status/
+│ │ │ │ ├── services/
+│ │ │ │ │ └── application.service.ts
+│ │ │ │ └── applications.routes.ts
+│ │ │ │
+│ │ │ ├── company/ # Company dashboard
+│ │ │ │ ├── components/
+│ │ │ │ │ ├── dashboard/
+│ │ │ │ │ ├── post-job/
+│ │ │ │ │ ├── manage-jobs/
+│ │ │ │ │ ├── applicants-list/
+│ │ │ │ │ └── applicant-detail/
+│ │ │ │ ├── services/
+│ │ │ │ │ └── company.service.ts
+│ │ │ │ └── company.routes.ts
+│ │ │ │
+│ │ │ └── profile/ # User profile
+│ │ │ ├── components/
+│ │ │ │ ├── profile-view/
+│ │ │ │ ├── profile-edit/
+│ │ │ │ └── resume-upload/
+│ │ │ ├── services/
+│ │ │ │ └── profile.service.ts
+│ │ │ └── profile.routes.ts
+│ │ │
+│ │ ├── app.component.ts
+│ │ ├── app.routes.ts # Main routing
+│ │ └── app.config.ts
+│ │
+│ ├── assets/
+│ ├── environments/
+│ │ ├── environment.ts
+│ │ └── environment.development.ts
+│ └── styles.css
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.2.1.
+jobly-firebase/
+├── users/
+│ └── {userId}
+│ ├── email
+│ ├── role: 'seeker' | 'company'
+│ ├── displayName
+│ ├── photoURL
+│ ├── createdAt
+│ └── profile: {
+│ // Role-specific data
+│ }
+│
+├── jobs/
+│ └── {jobId}
+│ ├── companyId
+│ ├── title
+│ ├── description
+│ ├── requirements[]
+│ ├── location
+│ ├── salary: { min, max, currency }
+│ ├── type: 'full-time' | 'part-time' | 'contract'
+│ ├── category
+│ ├── status: 'active' | 'closed'
+│ ├── createdAt
+│ └── updatedAt
+│
+└── applications/
+└── {applicationId}
+├── jobId
+├── seekerId
+├── companyId
+├── status: 'pending' | 'reviewing' | 'accepted' | 'rejected'
+├── resumeURL
+├── coverLetter
+├── appliedAt
+└── updatedAt
 
-## Development server
+🎨 Angular Material Components to Use
 
-To start a local development server, run:
+MatToolbar - Navigation header
+MatSidenav - Side navigation
+MatCard - Job cards, applicant cards
+MatTable - Applicants list for companies
+MatPaginator - Pagination for job listings
+MatFormField - All form inputs
+MatSelect - Dropdowns (job type, category)
+MatChip - Skills, tags, filters
+MatDialog - Confirmation dialogs, application forms
+MatSnackBar - Notifications
+MatBadge - Notification counts
+MatTabs - Company dashboard sections
+MatExpansionPanel - Job details accordion
+MatButton - All buttons with elevation
 
-```bash
-ng serve
-```
+🚀 Development Phases
+Phase 1: Foundation
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Setup Angular project with Firebase => done
+Configure Angular Material theme => done
+Implement authentication (email/password, Google)
+Create core services and guards
+Build basic layout (header, footer, routing)
 
-## Code scaffolding
+Phase 2: Job Seeker Features
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Job listing with filters (signals + observables)
+Job detail view
+Application form with resume upload
+My applications dashboard
+Profile management
 
-```bash
-ng generate component component-name
-```
+Phase 3: Company Features
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Company dashboard
+Post/edit job form
+Manage jobs (active/closed)
+View applicants with filters
+Application status management
 
-```bash
-ng generate --help
-```
+Phase 4: Enhancement
 
-## Building
+Real-time notifications
+Search with debouncing
+Advanced filtering
+Email notifications (Firebase Functions)
+Analytics dashboard
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+💡 Best Practices Applied
+✅ Standalone components - Modern Angular approach
+✅ Lazy loading - Better performance
+✅ OnPush change detection - Optimize rendering
+✅ Smart/Dumb component pattern - Clear separation
+✅ RxJS operators - Clean async code
+✅ Signals - Reactive state management
+✅ Type safety - Strong typing everywhere
+✅ Error handling - Interceptors + try-catch
+✅ Accessibility - ARIA labels, keyboard navigation
+Ready to start building? I can help you with specific components or features! 🚀

@@ -1,0 +1,214 @@
+@let currentJob = job();
+@if (currentJob) {
+<div class="job-details-container">
+  <!-- Back Button -->
+  <button mat-button class="back-button" (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+    Back to Jobs
+  </button>
+
+  <!-- Main Content -->
+  <div class="job-details-content">
+    <!-- Left Column - Job Info -->
+    <div class="job-info">
+      <!-- Header Section -->
+      <mat-card class="job-header-card">
+        <div class="job-header">
+          <div class="company-logo">
+            @if (currentJob!.companyLogo) {
+            <img [src]="currentJob!.companyLogo" [alt]="currentJob!.companyName + ' logo'" />
+            } @else {
+            <div class="logo-placeholder">
+              <mat-icon>business</mat-icon>
+            </div>
+            }
+          </div>
+
+          <div class="job-header-info">
+            <h1 class="job-title">{{ currentJob!.title }}</h1>
+            <div class="company-info">
+              <span class="company-name">
+                <mat-icon>business</mat-icon>
+                {{ currentJob!.companyName }}
+              </span>
+              <span class="separator">•</span>
+              <span class="location">
+                <mat-icon>location_on</mat-icon>
+                {{ getLocationString() }}
+              </span>
+              <span class="separator">•</span>
+              <span class="posted-time">
+                <mat-icon>schedule</mat-icon>
+                Posted {{ currentJob!.createdAt | date : 'mediumDate' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Job Meta Info -->
+        <div class="job-meta">
+          <div class="meta-item">
+            <mat-icon>work</mat-icon>
+            <div>
+              <span class="meta-label">Job Type</span>
+              <span class="meta-value">{{ getJobTypeLabel() }}</span>
+            </div>
+          </div>
+
+          @if (currentJob!.experienceLevel) {
+          <div class="meta-item">
+            <mat-icon>trending_up</mat-icon>
+            <div>
+              <span class="meta-label">Experience</span>
+              <span class="meta-value">{{ currentJob!.experienceLevel | titlecase }}</span>
+            </div>
+          </div>
+          } @if (currentJob!.salary) {
+          <div class="meta-item">
+            <mat-icon>payments</mat-icon>
+            <div>
+              <span class="meta-label">Salary</span>
+              <span class="meta-value">{{ formatSalary() }}</span>
+            </div>
+          </div>
+          } @if (currentJob!.numberOfPositions) {
+          <div class="meta-item">
+            <mat-icon>people</mat-icon>
+            <div>
+              <span class="meta-label">Positions</span>
+              <span class="meta-value">{{ currentJob!.numberOfPositions }} open</span>
+            </div>
+          </div>
+          }
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button mat-raised-button color="primary" class="apply-button" (click)="onApply()">
+            <mat-icon>send</mat-icon>
+            Apply Now
+          </button>
+          <button mat-stroked-button (click)="onSave()">
+            <mat-icon>bookmark_border</mat-icon>
+            Save Job
+          </button>
+          <button mat-icon-button matTooltip="Share">
+            <mat-icon>share</mat-icon>
+          </button>
+        </div>
+      </mat-card>
+
+      <!-- Description Section -->
+      <mat-card class="section-card">
+        <h2 class="section-title">Job Description</h2>
+        <p class="job-description">{{ currentJob!.description }}</p>
+      </mat-card>
+
+      <!-- Responsibilities Section -->
+      @if (currentJob?.responsibilities && currentJob!.responsibilities!.length > 0) {
+      <mat-card class="section-card">
+        <h2 class="section-title">Responsibilities</h2>
+        <ul class="bullet-list">
+          @for (item of currentJob!.responsibilities; track $index) {
+          <li>{{ item }}</li>
+          }
+        </ul>
+      </mat-card>
+      }
+
+      <!-- Requirements Section -->
+      <mat-card class="section-card">
+        <h2 class="section-title">Requirements</h2>
+        <ul class="bullet-list">
+          @for (item of currentJob!.requirements; track $index) {
+          <li>{{ item }}</li>
+          }
+        </ul>
+      </mat-card>
+
+      <!-- Benefits Section -->
+      @if (currentJob!.benefits && currentJob!.benefits!.length > 0) {
+      <mat-card class="section-card">
+        <h2 class="section-title">Benefits</h2>
+        <ul class="bullet-list">
+          @for (item of currentJob!.benefits; track $index) {
+          <li>{{ item }}</li>
+          }
+        </ul>
+      </mat-card>
+      }
+
+      <!-- Skills Section -->
+      <mat-card class="section-card">
+        <h2 class="section-title">Required Skills</h2>
+        <mat-chip-set class="skills-chips">
+          @for (skill of currentJob!.skills; track skill) {
+          <mat-chip>{{ skill }}</mat-chip>
+          }
+        </mat-chip-set>
+      </mat-card>
+    </div>
+
+    <!-- Right Column - Company & Apply Card (Sticky) -->
+    <aside class="job-sidebar">
+      <div class="sticky-wrapper">
+        <!-- Quick Apply Card -->
+        <mat-card class="sticky-card apply-card">
+          <h3>Quick Apply</h3>
+          <div class="apply-info">
+            <p>Don't miss this opportunity!</p>
+            <button mat-raised-button color="primary" class="full-width-button" (click)="onApply()">
+              Apply Now
+            </button>
+          </div>
+        </mat-card>
+
+        <!-- Company Info Card -->
+        <mat-card class="sticky-card company-card">
+          <h3>About {{ currentJob!.companyName }}</h3>
+          <div class="company-details">
+            <div class="company-logo-large">
+              @if (currentJob!.companyLogo) {
+              <img [src]="currentJob!.companyLogo" [alt]="currentJob!.companyName" />
+              } @else {
+              <div class="logo-placeholder-large">
+                <mat-icon>business</mat-icon>
+              </div>
+              }
+            </div>
+            <p class="company-description">
+              Learn more about {{ currentJob!.companyName }} and explore other opportunities.
+            </p>
+            <button mat-stroked-button class="full-width-button">View Company Profile</button>
+          </div>
+        </mat-card>
+
+        <!-- Job Stats Card -->
+        <mat-card class="sticky-card stats-card">
+          <h3>Job Statistics</h3>
+          <div class="stats">
+            @if (currentJob!.viewCount) {
+            <div class="stat-item">
+              <mat-icon>visibility</mat-icon>
+              <span>{{ currentJob!.viewCount }} views</span>
+            </div>
+            } @if (currentJob!.applicationCount) {
+            <div class="stat-item">
+              <mat-icon>person_add</mat-icon>
+              <span>{{ currentJob!.applicationCount }} applications</span>
+            </div>
+            } @if (currentJob!.expiresAt) {
+            <div class="stat-item">
+              <mat-icon>event</mat-icon>
+              <span>Expires {{ currentJob!.expiresAt | date : 'mediumDate' }}</span>
+            </div>
+            }
+          </div>
+        </mat-card>
+      </div>
+    </aside>
+  </div>
+</div>
+} @else {
+<jb-loader />
+}

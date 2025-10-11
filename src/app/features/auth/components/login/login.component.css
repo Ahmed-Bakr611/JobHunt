@@ -1,0 +1,21 @@
+.auth-card {
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: center;
+}
+mat-card-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+ul {
+  text-align: left;
+  margin: 20px 0;
+}
+mat-card-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  padding: 16px;
+}
