@@ -1,212 +1,140 @@
-# Project initial Structure
+# 🚀 JobHunt (aka _Jobly_)
 
-jobly/
+A modern **job marketplace platform** built with **Angular + Firebase**, designed for both job seekers and companies.  
+It provides a smooth, real-time experience with authentication, job listings, applications, and company dashboards.
+
+---
+
+## 📂 Project Structure
+
+jobHunt/
 ├── src/
 │ ├── app/
-│ │ ├── core/ # Singleton services, guards
-│ │ │ ├── guards/
-│ │ │ │ ├── auth.guard.ts
-│ │ │ │ ├── role.guard.ts
-│ │ │ │ └── unsaved-changes.guard.ts
-│ │ │ ├── interceptors/
-│ │ │ │ ├── auth.interceptor.ts
-│ │ │ │ └── error.interceptor.ts
-│ │ │ └── services/
-│ │ │ ├── auth.service.ts
-│ │ │ ├── notification.service.ts
-│ │ │ └── storage.service.ts
-│ │ │
-│ │ ├── shared/ # Shared components, directives, pipes
-│ │ │ ├── components/
-│ │ │ │ ├── header/
-│ │ │ │ ├── footer/
-│ │ │ │ ├── loader/
-│ │ │ │ └── confirmation-dialog/
-│ │ │ ├── directives/
-│ │ │ │ ├── auto-focus.directive.ts
-│ │ │ │ ├── debounce-click.directive.ts
-│ │ │ │ ├── img-fallback.directive.ts
-│ │ │ │ └── permission.directive.ts
-│ │ │ ├── pipes/
-│ │ │ │ ├── time-ago.pipe.ts
-│ │ │ │ ├── truncate.pipe.ts
-│ │ │ │ ├── salary-format.pipe.ts
-│ │ │ │ └── filter.pipe.ts
-│ │ │ └── models/
-│ │ │ ├── user.model.ts
-│ │ │ ├── job.model.ts
-│ │ │ └── application.model.ts
-│ │ │
-│ │ ├── features/ # Feature modules
-│ │ │ ├── auth/
-│ │ │ │ ├── components/
-│ │ │ │ │ ├── login/
-│ │ │ │ │ ├── register/
-│ │ │ │ │ └── role-selection/
-│ │ │ │ ├── auth.routes.ts
-│ │ │ │ └── auth.module.ts
-│ │ │ │
-│ │ │ ├── jobs/ # Job seeker features
-│ │ │ │ ├── components/
-│ │ │ │ │ ├── job-list/
-│ │ │ │ │ ├── job-detail/
-│ │ │ │ │ ├── job-card/
-│ │ │ │ │ └── job-filters/
-│ │ │ │ ├── services/
-│ │ │ │ │ └── job.service.ts
-│ │ │ │ ├── jobs.routes.ts
-│ │ │ │ └── jobs.module.ts
-│ │ │ │
-│ │ │ ├── applications/ # Job applications
-│ │ │ │ ├── components/
-│ │ │ │ │ ├── application-form/
-│ │ │ │ │ ├── my-applications/
-│ │ │ │ │ └── application-status/
-│ │ │ │ ├── services/
-│ │ │ │ │ └── application.service.ts
-│ │ │ │ └── applications.routes.ts
-│ │ │ │
-│ │ │ ├── company/ # Company dashboard
-│ │ │ │ ├── components/
-│ │ │ │ │ ├── dashboard/
-│ │ │ │ │ ├── post-job/
-│ │ │ │ │ ├── manage-jobs/
-│ │ │ │ │ ├── applicants-list/
-│ │ │ │ │ └── applicant-detail/
-│ │ │ │ ├── services/
-│ │ │ │ │ └── company.service.ts
-│ │ │ │ └── company.routes.ts
-│ │ │ │
-│ │ │ └── profile/ # User profile
-│ │ │ ├── components/
-│ │ │ │ ├── profile-view/
-│ │ │ │ ├── profile-edit/
-│ │ │ │ └── resume-upload/
-│ │ │ ├── services/
-│ │ │ │ └── profile.service.ts
-│ │ │ └── profile.routes.ts
-│ │ │
+│ │ ├── core/ # Singleton services, guards, interceptors
+│ │ ├── shared/ # Reusable components, directives, pipes, models
+│ │ ├── features/ # Feature modules (auth, jobs, applications, company, profile)
 │ │ ├── app.component.ts
-│ │ ├── app.routes.ts # Main routing
+│ │ ├── app.routes.ts
 │ │ └── app.config.ts
-│ │
 │ ├── assets/
 │ ├── environments/
 │ │ ├── environment.ts
 │ │ └── environment.development.ts
 │ └── styles.css
 
-jobly-firebase/
-├── users/
-│ └── {userId}
+bash
+Copy code
+
+### 🔑 Firebase Data Structure
+
+jobHunt-firebase/
+├── users/{userId}
 │ ├── email
 │ ├── role: 'seeker' | 'company'
 │ ├── displayName
 │ ├── photoURL
 │ ├── createdAt
-│ └── profile: {
-│ // Role-specific data
-│ }
-│
-├── jobs/
-│ └── {jobId}
+│ └── profile { ...role-specific data }
+
+├── jobs/{jobId}
 │ ├── companyId
-│ ├── title
-│ ├── description
-│ ├── requirements[]
+│ ├── title, description, requirements[]
 │ ├── location
-│ ├── salary: { min, max, currency }
+│ ├── salary { min, max, currency }
 │ ├── type: 'full-time' | 'part-time' | 'contract'
 │ ├── category
 │ ├── status: 'active' | 'closed'
-│ ├── createdAt
-│ └── updatedAt
-│
-└── applications/
-└── {applicationId}
-├── jobId
-├── seekerId
-├── companyId
+│ ├── createdAt, updatedAt
+
+└── applications/{applicationId}
+├── jobId, seekerId, companyId
 ├── status: 'pending' | 'reviewing' | 'accepted' | 'rejected'
-├── resumeURL
-├── coverLetter
-├── appliedAt
-└── updatedAt
+├── resumeURL, coverLetter
+├── appliedAt, updatedAt
 
-🎨 Angular Material Components to Use
+markdown
+Copy code
 
-MatToolbar - Navigation header
-MatSidenav - Side navigation
-MatCard - Job cards, applicant cards
-MatTable - Applicants list for companies
-MatPaginator - Pagination for job listings
-MatFormField - All form inputs
-MatSelect - Dropdowns (job type, category)
-MatChip - Skills, tags, filters
-MatDialog - Confirmation dialogs, application forms
-MatSnackBar - Notifications
-MatBadge - Notification counts
-MatTabs - Company dashboard sections
-MatExpansionPanel - Job details accordion
-MatButton - All buttons with elevation
+---
 
-🚀 Development Phases
-Phase 1: Foundation
+## 🎨 Angular Material Components Used
 
-Setup Angular project with Firebase => done
-Configure Angular Material theme => done
-Implement authentication (email/password, Google)
-Create core services and guards
-Build basic layout (header, footer, routing)
+- **MatToolbar** → Navigation header
+- **MatSidenav** → Side navigation
+- **MatCard** → Job & applicant cards
+- **MatTable** → Applicants list
+- **MatPaginator** → Job listing pagination
+- **MatFormField / MatSelect / MatChip** → Forms & filters
+- **MatDialog** → Application forms, confirmations
+- **MatSnackBar** → Notifications
+- **MatBadge** → Notification counts
+- **MatTabs** → Company dashboard sections
+- **MatExpansionPanel** → Job details accordion
+- **MatButton** → All buttons
 
-Phase 2: Job Seeker Features
+---
 
-Job listing with filters (signals + observables)
-Job detail view
-Application form with resume upload
-My applications dashboard
-Profile management
+## 🚀 Development Phases
 
-Phase 3: Company Features
+### Phase 1: Foundation
 
-Company dashboard
-Post/edit job form
-Manage jobs (active/closed)
-View applicants with filters
-Application status management
+- [x] Setup Angular project with Firebase
+- [x] Configure Angular Material theme
+- [ ] Authentication (email/password, Google)
+- [ ] Core services + guards
+- [ ] Layout (header, footer, routing)
 
-Phase 4: Enhancement
+### Phase 2: Job Seeker Features
 
-Real-time notifications
-Search with debouncing
-Advanced filtering
-Email notifications (Firebase Functions)
-Analytics dashboard
+- Job listing with filters (signals + observables)
+- Job detail view
+- Application form with resume upload
+- My applications dashboard
+- Profile management
 
-💡 Best Practices Applied
-✅ Standalone components - Modern Angular approach
-✅ Lazy loading - Better performance
-✅ OnPush change detection - Optimize rendering
-✅ Smart/Dumb component pattern - Clear separation
-✅ RxJS operators - Clean async code
-✅ Signals - Reactive state management
-✅ Type safety - Strong typing everywhere
-✅ Error handling - Interceptors + try-catch
-✅ Accessibility - ARIA labels, keyboard navigation
-Ready to start building? I can help you with specific components or features! 🚀
+### Phase 3: Company Features
 
-# Commit Message Common Verbs
+- Company dashboard
+- Post/edit job form
+- Manage jobs (active/closed)
+- View applicants + filters
+- Application status management
 
-Add → add login feature, add new API endpoint
+### Phase 4: Enhancements
 
-Fix → fix typo, fix crash in job service
+- Real-time notifications
+- Search with debouncing
+- Advanced filtering
+- Email notifications (Firebase Functions)
+- Analytics dashboard
 
-Update → update dependencies, update README
+---
 
-Remove → remove unused imports, remove old API
+## ✅ Best Practices
 
-Refactor → refactor auth module
+- **Standalone components** (modern Angular)
+- **Lazy loading** for performance
+- **OnPush change detection** for efficiency
+- **Smart/Dumb component pattern**
+- **RxJS + Signals** for reactive state
+- **Type safety everywhere**
+- **Interceptors + try/catch** for error handling
+- **Accessibility** (ARIA labels, keyboard support)
 
-Improve → improve error handling, improve UI performance
+---
 
-Change → change default port to 3000
+## 📌 Commit Message Guidelines
+
+Use **imperative verbs** with Conventional Commit style:
+
+- **Add** → `add login feature`
+- **Fix** → `fix crash in job service`
+- **Update** → `update dependencies`
+- **Remove** → `remove unused imports`
+- **Refactor** → `refactor auth module`
+- **Improve** → `improve error handling`
+- **Change** → `change default port to 3000`
+
+---
+
+🔥 With **JobHunt (_Jobly_)**, job seekers can easily apply and track applications, while companies can manage postings and applicants in real time.
