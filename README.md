@@ -1,3 +1,5 @@
+# Project initial Structure
+
 jobly/
 ├── src/
 │ ├── app/
@@ -192,3 +194,19 @@ Analytics dashboard
 ✅ Error handling - Interceptors + try-catch
 ✅ Accessibility - ARIA labels, keyboard navigation
 Ready to start building? I can help you with specific components or features! 🚀
+
+# Commit Message Common Verbs
+
+Add → add login feature, add new API endpoint
+
+Fix → fix typo, fix crash in job service
+
+Update → update dependencies, update README
+
+Remove → remove unused imports, remove old API
+
+Refactor → refactor auth module
+
+Improve → improve error handling, improve UI performance
+
+Change → change default port to 3000
