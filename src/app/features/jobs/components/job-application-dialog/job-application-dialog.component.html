@@ -9,7 +9,7 @@
       <h3>{{ job?.companyName }}</h3>
       <p class="job-location">
         <mat-icon>location_on</mat-icon>
-        {{ getLocationString() }}
+        {{ job?.location?.city }}, {{ job?.location?.country }}
       </p>
     </div>
 

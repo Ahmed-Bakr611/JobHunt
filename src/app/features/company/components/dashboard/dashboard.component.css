@@ -190,6 +190,16 @@
   align-items: center;
 }
 
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 /* Status Chips */
 .status-pending {
   background: #fff3cd;

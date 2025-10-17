@@ -111,9 +111,9 @@
             <p class="application-date">{{ formatDate(application.appliedAt) }}</p>
           </div>
           <div class="application-status">
-            <mat-chip [class]="getApplicationStatusClass(application.status)">
+            <span class="status-badge" [class]="getApplicationStatusClass(application.status)">
               {{ getApplicationStatusLabel(application.status) }}
-            </mat-chip>
+            </span>
           </div>
         </div>
         }

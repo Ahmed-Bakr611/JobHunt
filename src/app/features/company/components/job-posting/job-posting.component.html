@@ -227,13 +227,13 @@
           <p class="review-subtitle">Please review all details before posting</p>
 
           <div class="review-card">
-            <h3>{{ currentJobData.title }}</h3>
-            <p class="company-name">{{ currentJobData.companyName }}</p>
+            <h3>{{ basicInfoForm.get('title')?.value }}</h3>
+            <p class="company-name">{{ basicInfoForm.get('companyName')?.value }}</p>
 
             <div class="job-meta">
-              <mat-chip>{{ getJobTypeLabel(currentJobData.type) }}</mat-chip>
-              <mat-chip>{{ currentJobData.category }}</mat-chip>
-              <mat-chip>{{ getExperienceLabel(currentJobData.experienceLevel) }}</mat-chip>
+              <mat-chip>{{ getJobTypeLabel(detailsForm.get('type')?.value) }}</mat-chip>
+              <mat-chip>{{ basicInfoForm.get('category')?.value }}</mat-chip>
+              <mat-chip>{{ getExperienceLabel(detailsForm.get('experienceLevel')?.value || 'entry') }}</mat-chip>
             </div>
 
             <div class="location-info">
