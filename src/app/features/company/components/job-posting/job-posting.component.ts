@@ -45,10 +45,10 @@ export class JobPostingComponent implements OnInit {
   private snackBar = inject(MatSnackBar);
 
   // Form groups for each step
-  basicInfoForm: FormGroup;
-  detailsForm: FormGroup;
-  requirementsForm: FormGroup;
-  reviewForm: FormGroup;
+  basicInfoForm!: FormGroup;
+  detailsForm!: FormGroup;
+  requirementsForm!: FormGroup;
+  reviewForm!: FormGroup;
 
   // Loading state
   isSubmitting = signal(false);
@@ -74,8 +74,16 @@ export class JobPostingComponent implements OnInit {
   ];
 
   categories = [
-    'Technology', 'Healthcare', 'Finance', 'Education', 'Marketing',
-    'Sales', 'Design', 'Engineering', 'Operations', 'Human Resources'
+    'Technology',
+    'Healthcare',
+    'Finance',
+    'Education',
+    'Marketing',
+    'Sales',
+    'Design',
+    'Engineering',
+    'Operations',
+    'Human Resources',
   ];
 
   constructor() {
@@ -176,13 +184,16 @@ export class JobPostingComponent implements OnInit {
   }
 
   removeSkill(skill: string): void {
-    const skills = this.getSkills().filter(s => s !== skill);
+    const skills = this.getSkills().filter((s) => s !== skill);
     this.requirementsForm.patchValue({ skills: skills.join(', ') });
   }
 
   getSkills(): string[] {
     const skillsValue = this.requirementsForm.get('skills')?.value || '';
-    return skillsValue.split(',').map(s => s.trim()).filter(s => s.length > 0);
+    return skillsValue
+      .split(',')
+      .map((s: string) => s.trim())
+      .filter((s: string) => s.length > 0);
   }
 
   // Submit job
@@ -224,12 +235,10 @@ export class JobPostingComponent implements OnInit {
 
     return {
       title: basicInfo.title,
-      companyId: this.authService.userId()!,
-      companyName: basicInfo.companyName,
       description: details.description,
-      responsibilities: details.responsibilities.split('\n').filter(r => r.trim()),
-      benefits: details.benefits ? details.benefits.split('\n').filter(b => b.trim()) : [],
-      requirements: requirements.requirements.split('\n').filter(r => r.trim()),
+      responsibilities: details.responsibilities.split('\n').filter((r: string) => r.trim()),
+      benefits: details.benefits ? details.benefits.split('\n').filter((b: string) => b.trim()) : [],
+      requirements: requirements.requirements.split('\n').filter((r: string) => r.trim()),
       skills: this.getSkills(),
       location: {
         city: basicInfo.location.city,
@@ -237,12 +246,15 @@ export class JobPostingComponent implements OnInit {
         remote: basicInfo.location.remote,
         hybrid: basicInfo.location.hybrid,
       },
-      salary: details.salary.min && details.salary.max ? {
-        min: details.salary.min,
-        max: details.salary.max,
-        currency: details.salary.currency,
-        period: details.salary.period,
-      } : undefined,
+      salary:
+        details.salary.min && details.salary.max
+          ? {
+              min: details.salary.min,
+              max: details.salary.max,
+              currency: details.salary.currency,
+              period: details.salary.period,
+            }
+          : undefined,
       type: basicInfo.type,
       category: basicInfo.category,
       experienceLevel: details.experienceLevel,
@@ -259,7 +271,9 @@ export class JobPostingComponent implements OnInit {
   get salaryRange(): string {
     const salary = this.detailsForm.get('salary')?.value;
     if (!salary || !salary.min || !salary.max) return 'Not specified';
-    return `${salary.currency} ${salary.min.toLocaleString()} - ${salary.max.toLocaleString()} / ${salary.period}`;
+    return `${salary.currency} ${salary.min.toLocaleString()} - ${salary.max.toLocaleString()} / ${
+      salary.period
+    }`;
   }
 
   get locationString(): string {
@@ -273,12 +287,12 @@ export class JobPostingComponent implements OnInit {
   }
 
   getJobTypeLabel(type: JobType): string {
-    const jobType = this.jobTypes.find(t => t.value === type);
+    const jobType = this.jobTypes.find((t) => t.value === type);
     return jobType?.label || type;
   }
 
   getExperienceLabel(level: ExperienceLevel): string {
-    const expLevel = this.experienceLevels.find(l => l.value === level);
+    const expLevel = this.experienceLevels.find((l) => l.value === level);
     return expLevel?.label || level;
   }
 }

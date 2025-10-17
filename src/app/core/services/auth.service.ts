@@ -473,7 +473,12 @@ export class AuthService {
         if (userInfoResponse.success && userInfoResponse.data) {
           // Existing user - load their profile
           console.log('📂 Existing user found, loading profile...');
-          await this.handleAuthenticatedUser(userCredential.user, userInfoResponse.data.role);
+          if (userInfoResponse.data && !Array.isArray(userInfoResponse.data)) {
+            const userInfo = userInfoResponse.data as UserInfo;
+            await this.handleAuthenticatedUser(userCredential.user, userInfo.role);
+          } else {
+            throw new Error('User information not found');
+          }
         } else {
           // New user - redirect to role selection
           console.log('🆕 New user detected, redirecting to role selection...');
@@ -559,7 +564,12 @@ export class AuthService {
         if (userInfoResponse.success && userInfoResponse.data) {
           // Existing user - load their profile
           console.log('📂 Existing user found, loading profile...');
-          await this.handleAuthenticatedUser(result.user, userInfoResponse.data.role);
+          if (userInfoResponse.data && !Array.isArray(userInfoResponse.data)) {
+            const userInfo = userInfoResponse.data as UserInfo;
+            await this.handleAuthenticatedUser(result.user, userInfo.role);
+          } else {
+            throw new Error('User information not found');
+          }
         } else {
           // New user - redirect to role selection
           console.log('🆕 New user detected, redirecting to role selection...');

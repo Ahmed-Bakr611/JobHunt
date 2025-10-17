@@ -1,7 +1,7 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
-import { FirestoreCrudService } from '../../FireBase/firestorecrud.service';
+import { FirestoreCrudService } from '@fb/firestorecrud.service';
 import { AuthService } from './auth.service';
-import { COLLECTIONS } from '../../FireBase/const';
+import { COLLECTIONS } from '@fb/const';
 import { firstValueFrom } from 'rxjs';
 
 export interface Application {
@@ -51,23 +51,23 @@ export class ApplicationService {
   readonly myApplications = computed(() => {
     const userId = this.authService.userId();
     if (!userId) return [];
-    return this.applications().filter(app => app.seekerId === userId);
+    return this.applications().filter((app) => app.seekerId === userId);
   });
 
   readonly pendingApplications = computed(() => {
-    return this.myApplications().filter(app => app.status === 'pending');
+    return this.myApplications().filter((app) => app.status === 'pending');
   });
 
   readonly reviewingApplications = computed(() => {
-    return this.myApplications().filter(app => app.status === 'reviewing');
+    return this.myApplications().filter((app) => app.status === 'reviewing');
   });
 
   readonly acceptedApplications = computed(() => {
-    return this.myApplications().filter(app => app.status === 'accepted');
+    return this.myApplications().filter((app) => app.status === 'accepted');
   });
 
   readonly rejectedApplications = computed(() => {
-    return this.myApplications().filter(app => app.status === 'rejected');
+    return this.myApplications().filter((app) => app.status === 'rejected');
   });
 
   /**
@@ -130,12 +130,10 @@ export class ApplicationService {
         throw new Error('User not authenticated');
       }
 
-      const response = await firstValueFrom(
-        this.crudService.getAll(COLLECTIONS.Applications)
-      );
+      const response = await firstValueFrom(this.crudService.getAll(COLLECTIONS.Applications));
 
       if (response.success && Array.isArray(response.data)) {
-        const userApplications = response.data.filter(app => app.seekerId === userId);
+        const userApplications = response.data.filter((app) => app.seekerId === userId);
         this.applicationsSignal.set(userApplications);
         console.log('✅ Applications loaded:', userApplications.length);
       } else {
@@ -158,12 +156,10 @@ export class ApplicationService {
       this.loadingSignal.set(true);
       this.errorSignal.set(null);
 
-      const response = await firstValueFrom(
-        this.crudService.getAll(COLLECTIONS.Applications)
-      );
+      const response = await firstValueFrom(this.crudService.getAll(COLLECTIONS.Applications));
 
       if (response.success && Array.isArray(response.data)) {
-        const jobApplications = response.data.filter(app => app.jobId === jobId);
+        const jobApplications = response.data.filter((app) => app.jobId === jobId);
         console.log('✅ Job applications loaded:', jobApplications.length);
         return jobApplications;
       } else {
@@ -181,7 +177,11 @@ export class ApplicationService {
   /**
    * Update application status (company action)
    */
-  async updateApplicationStatus(applicationId: string, status: ApplicationStatus, notes?: string): Promise<void> {
+  async updateApplicationStatus(
+    applicationId: string,
+    status: ApplicationStatus,
+    notes?: string
+  ): Promise<void> {
     try {
       this.loadingSignal.set(true);
       this.errorSignal.set(null);
@@ -218,7 +218,7 @@ export class ApplicationService {
   hasAppliedToJob(jobId: string): boolean {
     const userId = this.authService.userId();
     if (!userId) return false;
-    return this.myApplications().some(app => app.jobId === jobId);
+    return this.myApplications().some((app) => app.jobId === jobId);
   }
 
   /**
@@ -227,7 +227,7 @@ export class ApplicationService {
   getApplicationForJob(jobId: string): Application | null {
     const userId = this.authService.userId();
     if (!userId) return null;
-    return this.myApplications().find(app => app.jobId === jobId) || null;
+    return this.myApplications().find((app) => app.jobId === jobId) || null;
   }
 
   /**

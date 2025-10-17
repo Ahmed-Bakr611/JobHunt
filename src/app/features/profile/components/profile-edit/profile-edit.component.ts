@@ -316,7 +316,7 @@ export class ProfileEditComponent implements OnInit, OnDestroy {
 
   getSkills(): string[] {
     const skillsValue = this.profileForm.get('skills')?.value || '';
-    return skillsValue.split(',').map(s => s.trim()).filter(s => s.length > 0);
+    return skillsValue.split(',').map((s: string) => s.trim()).filter((s: string) => s.length > 0);
   }
 
   // Submit profile
@@ -345,9 +345,9 @@ export class ProfileEditComponent implements OnInit, OnDestroy {
       // Add form data
       Object.keys(formData).forEach(key => {
         if (key === 'skills' && this.userRole() === 'seeker') {
-          updates[key as keyof (SeekerProfile | CompanyProfile)] = this.getSkills();
+          (updates as any)[key] = this.getSkills();
         } else if (formData[key] && formData[key].trim()) {
-          updates[key as keyof (SeekerProfile | CompanyProfile)] = formData[key].trim();
+          (updates as any)[key] = formData[key].trim();
         }
       });
 

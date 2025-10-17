@@ -112,7 +112,7 @@ export class JobApplicationDialogComponent implements OnInit {
     this.resumeUploading = true;
     this.resumeProgress = 0;
 
-    this.cloudinaryService.uploadFile(this.resumeFile, 'resumes').subscribe({
+        this.cloudinaryService.uploadFile(this.resumeFile, 'cvs').subscribe({
       next: (response) => {
         this.resumeUrl = response.secure_url;
         this.resumeUploading = false;
@@ -159,7 +159,7 @@ export class JobApplicationDialogComponent implements OnInit {
         companyId: this.job.companyId,
         jobTitle: this.job.title,
         companyName: this.job.companyName,
-        resumeURL: this.resumeUrl,
+        resumeURL: this.resumeUrl || undefined,
         coverLetter: this.applicationForm.value.coverLetter,
       };
 
