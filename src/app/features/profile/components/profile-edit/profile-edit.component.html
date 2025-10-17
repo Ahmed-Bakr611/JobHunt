@@ -158,7 +158,10 @@
               }
             </div>
             @if (cvUploading) {
-            <mat-progress-bar mode="indeterminate" class="upload-progress"></mat-progress-bar>
+            <div class="upload-progress">
+              <mat-spinner diameter="20"></mat-spinner>
+              <span>Uploading...</span>
+            </div>
             }
             <button mat-button (click)="removeCv()" [disabled]="cvUploading">
               <mat-icon>delete</mat-icon>
