@@ -4,23 +4,79 @@ A modern **job marketplace platform** built with **Angular + Firebase**, designe
 It provides a smooth, real-time experience with authentication, job listings, applications, and company dashboards.
 
 ---
+# 📂 Project Structure
 
-## 📂 Project Structure
-
+```
 jobHunt/
 ├── src/
-│ ├── app/
-│ │ ├── core/ # Singleton services, guards, interceptors
-│ │ ├── shared/ # Reusable components, directives, pipes, models
-│ │ ├── features/ # Feature modules (auth, jobs, applications, company, profile)
-│ │ ├── app.component.ts
-│ │ ├── app.routes.ts
-│ │ └── app.config.ts
-│ ├── assets/
-│ ├── environments/
-│ │ ├── environment.ts
-│ │ └── environment.development.ts
-│ └── styles.css
+│   ├── app/
+│   │   ├── core/              # Singleton services, guards, interceptors
+│   │   ├── shared/            # Reusable components, directives, pipes, models
+│   │   ├── features/          # Feature modules (auth, jobs, applications, company, profile)
+│   │   ├── app.component.ts
+│   │   ├── app.routes.ts
+│   │   └── app.config.ts
+│   ├── assets/
+│   ├── environments/
+│   │   ├── environment.ts
+│   │   └── environment.development.ts
+│   └── styles.css
+└── ...
+```
+
+## Core Directory
+
+```
+core/
+├── services/
+│   ├── auth.service.ts
+│   ├── profile.service.ts
+│   ├── cloudinary.service.ts
+│   └── form-change-detection.service.ts
+├── guards/
+│   ├── auth.guard.ts
+│   └── role.guard.ts
+├── interceptors/
+│   └── http-error.interceptor.ts
+└── models/
+    └── user.model.ts
+```
+
+## Shared Directory
+
+```
+shared/
+├── components/
+│   ├── header/
+│   ├── footer/
+│   └── loader/
+├── directives/
+├── pipes/
+└── models/
+    └── user.model.ts
+```
+
+## Features Directory
+
+```
+features/
+├── auth/
+│   ├── login/
+│   ├── register/
+│   └── role-selection/
+├── profile/
+│   ├── profile-view/
+│   └── profile-edit/
+├── jobs/
+│   ├── job-list/
+│   ├── job-details/
+│   └── job-search/
+├── applications/
+│   └── application-list/
+└── company/
+    ├── company-dashboard/
+    └── job-post/
+```
 
 bash
 Copy code
