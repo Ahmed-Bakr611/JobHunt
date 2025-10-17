@@ -1,10 +1,10 @@
 # 🚀 JobHunt (aka _Jobly_)
 
-A modern **job marketplace platform** built with **Angular + Firebase**, designed for both job seekers and companies.  
-It provides a smooth, real-time experience with authentication, job listings, applications, and company dashboards.
+A modern **job marketplace platform** built with **Angular + Firebase**, designed for both job seekers and companies. It provides a smooth, real-time experience with authentication, job listings, applications, and company dashboards.
 
 ---
-# 📂 Project Structure
+
+## 📂 Project Structure
 
 ```
 jobHunt/
@@ -24,7 +24,7 @@ jobHunt/
 └── ...
 ```
 
-## Core Directory
+### Core Directory
 
 ```
 core/
@@ -42,7 +42,7 @@ core/
     └── user.model.ts
 ```
 
-## Shared Directory
+### Shared Directory
 
 ```
 shared/
@@ -56,7 +56,7 @@ shared/
     └── user.model.ts
 ```
 
-## Features Directory
+### Features Directory
 
 ```
 features/
@@ -78,55 +78,53 @@ features/
     └── job-post/
 ```
 
-bash
-Copy code
+---
 
-### 🔑 Firebase Data Structure
+## 🔑 Firebase Data Structure
 
+```
 jobHunt-firebase/
 ├── users/{userId}
-│ ├── email
-│ ├── role: 'seeker' | 'company'
-│ ├── displayName
-│ ├── photoURL
-│ ├── createdAt
-│ └── profile { ...role-specific data }
-
+│   ├── email
+│   ├── role: 'seeker' | 'company'
+│   ├── displayName
+│   ├── photoURL
+│   ├── createdAt
+│   └── profile { ...role-specific data }
+│
 ├── jobs/{jobId}
-│ ├── companyId
-│ ├── title, description, requirements[]
-│ ├── location
-│ ├── salary { min, max, currency }
-│ ├── type: 'full-time' | 'part-time' | 'contract'
-│ ├── category
-│ ├── status: 'active' | 'closed'
-│ ├── createdAt, updatedAt
-
+│   ├── companyId
+│   ├── title, description, requirements[]
+│   ├── location
+│   ├── salary { min, max, currency }
+│   ├── type: 'full-time' | 'part-time' | 'contract'
+│   ├── category
+│   ├── status: 'active' | 'closed'
+│   ├── createdAt, updatedAt
+│
 └── applications/{applicationId}
-├── jobId, seekerId, companyId
-├── status: 'pending' | 'reviewing' | 'accepted' | 'rejected'
-├── resumeURL, coverLetter
-├── appliedAt, updatedAt
-
-markdown
-Copy code
+    ├── jobId, seekerId, companyId
+    ├── status: 'pending' | 'reviewing' | 'accepted' | 'rejected'
+    ├── resumeURL, coverLetter
+    ├── appliedAt, updatedAt
+```
 
 ---
 
 ## 🎨 Angular Material Components Used
 
-- **MatToolbar** → Navigation header
-- **MatSidenav** → Side navigation
-- **MatCard** → Job & applicant cards
-- **MatTable** → Applicants list
-- **MatPaginator** → Job listing pagination
-- **MatFormField / MatSelect / MatChip** → Forms & filters
-- **MatDialog** → Application forms, confirmations
-- **MatSnackBar** → Notifications
-- **MatBadge** → Notification counts
-- **MatTabs** → Company dashboard sections
-- **MatExpansionPanel** → Job details accordion
-- **MatButton** → All buttons
+- **MatToolbar** — Navigation header
+- **MatSidenav** — Side navigation
+- **MatCard** — Job & applicant cards
+- **MatTable** — Applicants list
+- **MatPaginator** — Job listing pagination
+- **MatFormField / MatSelect / MatChip** — Forms & filters
+- **MatDialog** — Application forms, confirmations
+- **MatSnackBar** — Notifications
+- **MatBadge** — Notification counts
+- **MatTabs** — Company dashboard sections
+- **MatExpansionPanel** — Job details accordion
+- **MatButton** — All buttons
 
 ---
 
@@ -196,13 +194,13 @@ Copy code
 
 Use **imperative verbs** with Conventional Commit style:
 
-- **Add** → `add login feature`
-- **Fix** → `fix crash in job service`
-- **Update** → `update dependencies`
-- **Remove** → `remove unused imports`
-- **Refactor** → `refactor auth module`
-- **Improve** → `improve error handling`
-- **Change** → `change default port to 3000`
+- **Add** — `add login feature`
+- **Fix** — `fix crash in job service`
+- **Update** — `update dependencies`
+- **Remove** — `remove unused imports`
+- **Refactor** — `refactor auth module`
+- **Improve** — `improve error handling`
+- **Change** — `change default port to 3000`
 
 ---
 
