@@ -46,14 +46,18 @@ export class HeaderComponent {
     const role = this.auth.currentUser()?.role;
 
     if (role === 'company') {
-      return [{ label: 'Dashboard', route: '/company/dashboard' }];
+      return [
+        { label: 'Dashboard', route: '/company/dashboard' },
+        { label: 'Jobs', route: '/company/jobs' },
+        { label: 'Post Job', route: '/company/post-job' }
+      ];
     }
 
     // seeker by default
     return [
       { label: 'Jobs', route: '/jobs' },
       { label: 'My Applications', route: '/applications' },
-      { label: 'Profile', route: '/profile' }
+      { label: 'Profile', route: '/profile' },
     ];
   });
   async signOut() {

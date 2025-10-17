@@ -1,3 +1,139 @@
-<p>
-  dashboard works!
-</p>
+<div class="dashboard-container">
+  <div class="header">
+    <h1>
+      <mat-icon>dashboard</mat-icon>
+      Company Dashboard
+    </h1>
+    <p class="subtitle">Manage your jobs and track applications</p>
+  </div>
+
+  @if (isLoading()) {
+  <div class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading dashboard...</p>
+  </div>
+  } @else {
+  <!-- Statistics Cards -->
+  <div class="stats-grid">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon>work</mat-icon>
+          <div>
+            <h3>{{ stats().totalJobs }}</h3>
+            <p>Total Jobs</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon>check_circle</mat-icon>
+          <div>
+            <h3>{{ stats().activeJobs }}</h3>
+            <p>Active Jobs</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon>person_add</mat-icon>
+          <div>
+            <h3>{{ stats().totalApplications }}</h3>
+            <p>Total Applications</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon>schedule</mat-icon>
+          <div>
+            <h3>{{ stats().pendingApplications }}</h3>
+            <p>Pending Reviews</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions">
+    <mat-card class="actions-card">
+      <mat-card-header>
+        <mat-card-title>Quick Actions</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="action-buttons">
+          <button mat-raised-button color="primary" (click)="navigateToPostJob()">
+            <mat-icon>add</mat-icon>
+            Post New Job
+          </button>
+          <button mat-stroked-button (click)="navigateToJobs()">
+            <mat-icon>work</mat-icon>
+            Manage Jobs
+          </button>
+          <button mat-stroked-button (click)="navigateToApplicants()">
+            <mat-icon>people</mat-icon>
+            View Applicants
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Recent Applications -->
+  @if (getRecentApplications().length > 0) {
+  <mat-card class="applications-card">
+    <mat-card-header>
+      <div class="card-header-content">
+        <mat-card-title>Recent Applications</mat-card-title>
+        <button mat-button (click)="navigateToApplicants()">
+          View All
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="applications-list">
+        @for (application of getRecentApplications(); track application.id) {
+        <div class="application-item">
+          <div class="application-info">
+            <h4>{{ application.jobTitle }}</h4>
+            <p class="applicant-name">{{ application.seekerId }}</p>
+            <p class="application-date">{{ formatDate(application.appliedAt) }}</p>
+          </div>
+          <div class="application-status">
+            <mat-chip [class]="getApplicationStatusClass(application.status)">
+              {{ getApplicationStatusLabel(application.status) }}
+            </mat-chip>
+          </div>
+        </div>
+        }
+      </div>
+    </mat-card-content>
+  </mat-card>
+  } @else {
+  <mat-card class="empty-state-card">
+    <mat-card-content>
+      <div class="empty-state">
+        <mat-icon>inbox</mat-icon>
+        <h3>No Applications Yet</h3>
+        <p>Start by posting your first job to attract candidates</p>
+        <button mat-raised-button color="primary" (click)="navigateToPostJob()">
+          <mat-icon>add</mat-icon>
+          Post Your First Job
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  }
+  }
+</div>

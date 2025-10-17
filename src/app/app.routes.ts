@@ -48,4 +48,14 @@ export const routes: Routes = [
     component: DashboardComponent,
     canActivate: [authGuard, roleGuard(['company'])],
   },
+  {
+    path: 'company/post-job',
+    loadComponent: () => import('./features/company/components/job-posting/job-posting.component').then((m) => m.JobPostingComponent),
+    canActivate: [authGuard, roleGuard(['company'])],
+  },
+  {
+    path: 'company/jobs',
+    loadComponent: () => import('./features/company/components/job-management/job-management.component').then((m) => m.JobManagementComponent),
+    canActivate: [authGuard, roleGuard(['company'])],
+  },
 ];

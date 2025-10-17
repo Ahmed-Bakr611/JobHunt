@@ -1,0 +1,302 @@
+<div class="job-posting-container">
+  <div class="header">
+    <h1>
+      <mat-icon>post_add</mat-icon>
+      Post a New Job
+    </h1>
+    <p class="subtitle">Create a job posting to attract the best candidates</p>
+  </div>
+
+  <mat-card class="posting-card">
+    <mat-stepper #stepper [selectedIndex]="currentStep()" (selectionChange)="goToStep($event.selectedIndex)">
+      
+      <!-- Step 1: Basic Information -->
+      <mat-step [stepControl]="basicInfoForm" label="Basic Information">
+        <form [formGroup]="basicInfoForm">
+          <h2>Job Details</h2>
+          
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Job Title</mat-label>
+              <input matInput formControlName="title" placeholder="e.g., Senior Frontend Developer" required>
+              <mat-icon matPrefix>work</mat-icon>
+              <mat-error *ngIf="basicInfoForm.get('title')?.hasError('required')">
+                Job title is required
+              </mat-error>
+              <mat-error *ngIf="basicInfoForm.get('title')?.hasError('minlength')">
+                Job title must be at least 5 characters
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Job Type</mat-label>
+              <mat-select formControlName="type" required>
+                @for (type of jobTypes; track type.value) {
+                <mat-option [value]="type.value">{{ type.label }}</mat-option>
+                }
+              </mat-select>
+              <mat-icon matPrefix>schedule</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Category</mat-label>
+              <mat-select formControlName="category" required>
+                @for (category of categories; track category) {
+                <mat-option [value]="category">{{ category }}</mat-option>
+                }
+              </mat-select>
+              <mat-icon matPrefix>category</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>City</mat-label>
+              <input matInput formControlName="location.city" placeholder="e.g., New York" required>
+              <mat-icon matPrefix>location_on</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Country</mat-label>
+              <input matInput formControlName="location.country" placeholder="e.g., United States" required>
+            </mat-form-field>
+          </div>
+
+          <div class="checkbox-row">
+            <mat-checkbox formControlName="location.remote">Remote work allowed</mat-checkbox>
+            <mat-checkbox formControlName="location.hybrid">Hybrid work option</mat-checkbox>
+          </div>
+
+          <div class="step-actions">
+            <button mat-raised-button color="primary" matStepperNext [disabled]="!basicInfoForm.valid">
+              Next
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+        </form>
+      </mat-step>
+
+      <!-- Step 2: Job Details -->
+      <mat-step [stepControl]="detailsForm" label="Job Details">
+        <form [formGroup]="detailsForm">
+          <h2>Job Description & Compensation</h2>
+          
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Job Description</mat-label>
+            <textarea matInput formControlName="description" rows="6" 
+              placeholder="Describe the role, responsibilities, and what makes this opportunity special..."
+              required></textarea>
+            <mat-hint>Minimum 100 characters</mat-hint>
+            <mat-error *ngIf="detailsForm.get('description')?.hasError('required')">
+              Job description is required
+            </mat-error>
+            <mat-error *ngIf="detailsForm.get('description')?.hasError('minlength')">
+              Description must be at least 100 characters
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Key Responsibilities</mat-label>
+            <textarea matInput formControlName="responsibilities" rows="4" 
+              placeholder="List the main responsibilities (one per line)..."
+              required></textarea>
+            <mat-hint>One responsibility per line</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Benefits & Perks</mat-label>
+            <textarea matInput formControlName="benefits" rows="3" 
+              placeholder="List benefits and perks (one per line)..."></textarea>
+            <mat-hint>One benefit per line (optional)</mat-hint>
+          </mat-form-field>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Experience Level</mat-label>
+              <mat-select formControlName="experienceLevel" required>
+                @for (level of experienceLevels; track level.value) {
+                <mat-option [value]="level.value">{{ level.label }}</mat-option>
+                }
+              </mat-select>
+              <mat-icon matPrefix>trending_up</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Number of Positions</mat-label>
+              <input matInput type="number" formControlName="numberOfPositions" min="1" required>
+              <mat-icon matPrefix>group</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <mat-divider></mat-divider>
+          <h3>Salary Information (Optional)</h3>
+          
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="third-width">
+              <mat-label>Min Salary</mat-label>
+              <input matInput type="number" formControlName="salary.min" min="0">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="third-width">
+              <mat-label>Max Salary</mat-label>
+              <input matInput type="number" formControlName="salary.max" min="0">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="third-width">
+              <mat-label>Currency</mat-label>
+              <mat-select formControlName="salary.currency">
+                <mat-option value="USD">USD</mat-option>
+                <mat-option value="EUR">EUR</mat-option>
+                <mat-option value="GBP">GBP</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="step-actions">
+            <button mat-button matStepperPrevious>
+              <mat-icon>arrow_back</mat-icon>
+              Back
+            </button>
+            <button mat-raised-button color="primary" matStepperNext [disabled]="!detailsForm.valid">
+              Next
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+        </form>
+      </mat-step>
+
+      <!-- Step 3: Requirements -->
+      <mat-step [stepControl]="requirementsForm" label="Requirements">
+        <form [formGroup]="requirementsForm">
+          <h2>Skills & Requirements</h2>
+          
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Required Skills</mat-label>
+            <mat-chip-grid #chipGrid aria-label="Skills selection">
+              @for (skill of getSkills(); track skill) {
+              <mat-chip-row (removed)="removeSkill(skill)">
+                {{ skill }}
+                <button matChipRemove [attr.aria-label]="'remove ' + skill">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+              }
+            </mat-chip-grid>
+            <input placeholder="Add skills..." 
+              [matChipInputFor]="chipGrid" 
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              (matChipInputTokenEnd)="addSkill($event)">
+            <mat-hint>Press Enter or comma to add skills</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Requirements</mat-label>
+            <textarea matInput formControlName="requirements" rows="4" 
+              placeholder="List specific requirements (one per line)..."
+              required></textarea>
+            <mat-hint>One requirement per line</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Education Requirements</mat-label>
+            <textarea matInput formControlName="education" rows="2" 
+              placeholder="Educational requirements (optional)..."></textarea>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Experience Requirements</mat-label>
+            <textarea matInput formControlName="experience" rows="2" 
+              placeholder="Specific experience requirements (optional)..."></textarea>
+          </mat-form-field>
+
+          <div class="step-actions">
+            <button mat-button matStepperPrevious>
+              <mat-icon>arrow_back</mat-icon>
+              Back
+            </button>
+            <button mat-raised-button color="primary" matStepperNext [disabled]="!requirementsForm.valid">
+              Next
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+        </form>
+      </mat-step>
+
+      <!-- Step 4: Review -->
+      <mat-step label="Review & Post">
+        <div class="review-section">
+          <h2>Review Your Job Posting</h2>
+          <p class="review-subtitle">Please review all details before posting</p>
+
+          <div class="review-card">
+            <h3>{{ currentJobData.title }}</h3>
+            <p class="company-name">{{ currentJobData.companyName }}</p>
+            
+            <div class="job-meta">
+              <mat-chip>{{ getJobTypeLabel(currentJobData.type) }}</mat-chip>
+              <mat-chip>{{ currentJobData.category }}</mat-chip>
+              <mat-chip>{{ getExperienceLabel(currentJobData.experienceLevel) }}</mat-chip>
+            </div>
+
+            <div class="location-info">
+              <mat-icon>location_on</mat-icon>
+              <span>{{ locationString }}</span>
+            </div>
+
+            @if (currentJobData.salary) {
+            <div class="salary-info">
+              <mat-icon>attach_money</mat-icon>
+              <span>{{ salaryRange }}</span>
+            </div>
+            }
+
+            <div class="description-section">
+              <h4>Description</h4>
+              <p>{{ currentJobData.description }}</p>
+            </div>
+
+            @if (currentJobData.responsibilities && currentJobData.responsibilities.length > 0) {
+            <div class="responsibilities-section">
+              <h4>Responsibilities</h4>
+              <ul>
+                @for (responsibility of currentJobData.responsibilities; track responsibility) {
+                <li>{{ responsibility }}</li>
+                }
+              </ul>
+            </div>
+            }
+
+            @if (currentJobData.skills && currentJobData.skills.length > 0) {
+            <div class="skills-section">
+              <h4>Required Skills</h4>
+              <div class="skills-chips">
+                @for (skill of currentJobData.skills; track skill) {
+                <mat-chip>{{ skill }}</mat-chip>
+                }
+              </div>
+            </div>
+            }
+          </div>
+
+          <div class="step-actions">
+            <button mat-button matStepperPrevious>
+              <mat-icon>arrow_back</mat-icon>
+              Back
+            </button>
+            <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="isSubmitting()">
+              @if (isSubmitting()) {
+              <mat-spinner diameter="20" class="button-spinner"></mat-spinner>
+              <span>Posting Job...</span>
+              } @else {
+              <mat-icon>publish</mat-icon>
+              <span>Post Job</span>
+              }
+            </button>
+          </div>
+        </div>
+      </mat-step>
+    </mat-stepper>
+  </mat-card>
+</div>

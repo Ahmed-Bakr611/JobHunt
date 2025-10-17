@@ -1,0 +1,211 @@
+<div class="job-management-container">
+  <div class="header">
+    <h1>
+      <mat-icon>work</mat-icon>
+      Job Management
+    </h1>
+    <p class="subtitle">Manage your posted jobs and track applications</p>
+  </div>
+
+  @if (isLoading()) {
+  <div class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading your jobs...</p>
+  </div>
+  } @else {
+  <!-- Statistics Cards -->
+  <div class="stats-grid">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon>assignment</mat-icon>
+          <div>
+            <h3>{{ getJobStats().total }}</h3>
+            <p>Total Jobs</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon>check_circle</mat-icon>
+          <div>
+            <h3>{{ getJobStats().active }}</h3>
+            <p>Active Jobs</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon>pause_circle</mat-icon>
+          <div>
+            <h3>{{ getJobStats().closed }}</h3>
+            <p>Closed Jobs</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon>person_add</mat-icon>
+          <div>
+            <h3>{{ getJobStats().totalApplications }}</h3>
+            <p>Total Applications</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Jobs Table -->
+  <mat-card class="jobs-card">
+    <mat-card-header>
+      <div class="card-header-content">
+        <mat-card-title>Your Jobs</mat-card-title>
+        <button mat-raised-button color="primary" (click)="router.navigate(['/company/post-job'])">
+          <mat-icon>add</mat-icon>
+          Post New Job
+        </button>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Status Filter -->
+      <div class="filter-section">
+        <mat-form-field appearance="outline">
+          <mat-label>Filter by Status</mat-label>
+          <mat-select [(value)]="selectedStatus" (selectionChange)="onStatusFilterChange($event.value)">
+            @for (option of statusOptions; track option.value) {
+            <mat-option [value]="option.value">{{ option.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      @if (filteredDataSource.length === 0) {
+      <div class="empty-state">
+        <mat-icon>work_off</mat-icon>
+        <h3>No Jobs Found</h3>
+        <p>@if (selectedStatus === 'all') {
+          You haven't posted any jobs yet.
+        } @else {
+          No jobs with {{ getStatusLabel(selectedStatus as JobStatus) }} status.
+        }</p>
+        <button mat-raised-button color="primary" (click)="router.navigate(['/company/post-job'])">
+          <mat-icon>add</mat-icon>
+          Post Your First Job
+        </button>
+      </div>
+      } @else {
+      <!-- Jobs Table -->
+      <div class="table-container">
+        <table mat-table [dataSource]="getPaginatedData()" matSort (matSortChange)="onSortChange($event)" class="jobs-table">
+          <!-- Job Title Column -->
+          <ng-container matColumnDef="title">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Job Title</th>
+            <td mat-cell *matCellDef="let job">
+              <div class="job-info">
+                <h4>{{ job.title }}</h4>
+                <p class="company-name">{{ job.companyName }}</p>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Job Type Column -->
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <td mat-cell *matCellDef="let job">
+              <mat-chip>{{ getJobTypeLabel(job.type) }}</mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let job">
+              <mat-chip [class]="getStatusChipClass(job.status)">
+                {{ getStatusLabel(job.status) }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Applications Column -->
+          <ng-container matColumnDef="applications">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Applications</th>
+            <td mat-cell *matCellDef="let job">
+              <div class="applications-info">
+                <span class="count">{{ job.applicationCount || 0 }}</span>
+                <button mat-icon-button (click)="viewApplicants(job.id)" matTooltip="View Applicants">
+                  <mat-icon>people</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Created Date Column -->
+          <ng-container matColumnDef="createdAt">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Posted</th>
+            <td mat-cell *matCellDef="let job">
+              {{ formatDate(job.createdAt) }}
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let job">
+              <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="More Actions">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="viewJob(job.id)">
+                  <mat-icon>visibility</mat-icon>
+                  <span>View Job</span>
+                </button>
+                <button mat-menu-item (click)="editJob(job.id)">
+                  <mat-icon>edit</mat-icon>
+                  <span>Edit Job</span>
+                </button>
+                <button mat-menu-item (click)="viewApplicants(job.id)">
+                  <mat-icon>people</mat-icon>
+                  <span>View Applicants</span>
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item (click)="toggleJobStatus(job)">
+                  <mat-icon>{{ job.status === 'active' ? 'pause' : 'play_arrow' }}</mat-icon>
+                  <span>{{ job.status === 'active' ? 'Close Job' : 'Reopen Job' }}</span>
+                </button>
+                <button mat-menu-item (click)="deleteJob(job)" class="delete-action">
+                  <mat-icon>delete</mat-icon>
+                  <span>Delete Job</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <mat-paginator 
+        [length]="totalItems"
+        [pageSize]="pageSize"
+        [pageIndex]="pageIndex"
+        [pageSizeOptions]="[5, 10, 25, 50]"
+        (page)="onPageChange($event)"
+        showFirstLastButtons>
+      </mat-paginator>
+      }
+    </mat-card-content>
+  </mat-card>
+  }
+</div>
