@@ -50,7 +50,11 @@ export class HeaderComponent {
     }
 
     // seeker by default
-    return [{ label: 'Jobs', route: '/jobs' }];
+    return [
+      { label: 'Jobs', route: '/jobs' },
+      { label: 'My Applications', route: '/applications' },
+      { label: 'Profile', route: '/profile' }
+    ];
   });
   async signOut() {
     await this.auth.signOutUser();

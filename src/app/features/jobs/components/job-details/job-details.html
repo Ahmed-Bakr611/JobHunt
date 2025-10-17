@@ -156,9 +156,21 @@
         <mat-card class="sticky-card apply-card">
           <h3>Quick Apply</h3>
           <div class="apply-info">
+            @if (hasApplied()) {
+            <div class="application-status">
+              <mat-icon>check_circle</mat-icon>
+              <p class="status-text">{{ getApplicationStatus() }}</p>
+            </div>
+            } @else {
             <p>Don't miss this opportunity!</p>
             <button mat-raised-button color="primary" class="full-width-button" (click)="onApply()">
+              <mat-icon>send</mat-icon>
               Apply Now
+            </button>
+            }
+            <button mat-stroked-button class="full-width-button" (click)="onSave()">
+              <mat-icon>bookmark</mat-icon>
+              Save Job
             </button>
           </div>
         </mat-card>

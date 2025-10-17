@@ -1,3 +1,161 @@
-<p>
-  my-applications works!
-</p>
+<div class="my-applications-container">
+  <div class="header">
+    <h1>
+      <mat-icon>work_outline</mat-icon>
+      My Applications
+    </h1>
+    <p class="subtitle">Track your job applications and their status</p>
+  </div>
+
+  @if (isLoading()) {
+  <div class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading your applications...</p>
+  </div>
+  } @else {
+  <!-- Statistics Cards -->
+  <div class="stats-grid">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon>assignment</mat-icon>
+          <div>
+            <h3>{{ getApplicationStats().total }}</h3>
+            <p>Total Applications</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon>schedule</mat-icon>
+          <div>
+            <h3>{{ getApplicationStats().pending }}</h3>
+            <p>Pending</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon>visibility</mat-icon>
+          <div>
+            <h3>{{ getApplicationStats().reviewing }}</h3>
+            <p>Under Review</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon>check_circle</mat-icon>
+          <div>
+            <h3>{{ getApplicationStats().accepted }}</h3>
+            <p>Accepted</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Applications Table -->
+  <mat-card class="applications-card">
+    <mat-card-header>
+      <mat-card-title>Your Applications</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Status Filter -->
+      <div class="filter-section">
+        <mat-form-field appearance="outline">
+          <mat-label>Filter by Status</mat-label>
+          <mat-select [(value)]="selectedStatus" (selectionChange)="onStatusFilterChange($event.value)">
+            @for (option of statusOptions; track option.value) {
+            <mat-option [value]="option.value">{{ option.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      @if (filteredDataSource.length === 0) {
+      <div class="empty-state">
+        <mat-icon>inbox</mat-icon>
+        <h3>No Applications Found</h3>
+        <p>@if (selectedStatus === 'all') {
+          You haven't applied to any jobs yet.
+        } @else {
+          No applications with {{ getStatusLabel(selectedStatus as ApplicationStatus) }} status.
+        }</p>
+        <button mat-raised-button color="primary" (click)="router.navigate(['/jobs'])">
+          <mat-icon>search</mat-icon>
+          Browse Jobs
+        </button>
+      </div>
+      } @else {
+      <!-- Applications Table -->
+      <div class="table-container">
+        <table mat-table [dataSource]="getPaginatedData()" matSort (matSortChange)="onSortChange($event)" class="applications-table">
+          <!-- Job Title Column -->
+          <ng-container matColumnDef="jobTitle">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Job Title</th>
+            <td mat-cell *matCellDef="let application">
+              <div class="job-info">
+                <h4>{{ application.jobTitle }}</h4>
+                <p class="company-name">{{ application.companyName }}</p>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let application">
+              <mat-chip [class]="getStatusChipClass(application.status)">
+                {{ getStatusLabel(application.status) }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Applied Date Column -->
+          <ng-container matColumnDef="appliedAt">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Applied Date</th>
+            <td mat-cell *matCellDef="let application">
+              {{ formatDate(application.appliedAt) }}
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let application">
+              <button mat-icon-button (click)="viewJob(application.jobId)" matTooltip="View Job">
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <mat-paginator 
+        [length]="totalItems"
+        [pageSize]="pageSize"
+        [pageIndex]="pageIndex"
+        [pageSizeOptions]="[5, 10, 25, 50]"
+        (page)="onPageChange($event)"
+        showFirstLastButtons>
+      </mat-paginator>
+      }
+    </mat-card-content>
+  </mat-card>
+  }
+</div>

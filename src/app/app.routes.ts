@@ -36,6 +36,11 @@ export const routes: Routes = [
     component: ProfileEditComponent,
     canActivate: [authGuard],
   },
+  {
+    path: 'applications',
+    loadComponent: () => import('./features/applications/components/my-applications/my-applications.component').then((m) => m.MyApplicationsComponent),
+    canActivate: [authGuard],
+  },
 
   // company-only routes
   {

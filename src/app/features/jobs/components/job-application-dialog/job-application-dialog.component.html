@@ -1,0 +1,83 @@
+<div class="application-dialog">
+  <h2 mat-dialog-title>
+    <mat-icon>work</mat-icon>
+    Apply to {{ job?.title }}
+  </h2>
+
+  <mat-dialog-content>
+    <div class="job-info">
+      <h3>{{ job?.companyName }}</h3>
+      <p class="job-location">
+        <mat-icon>location_on</mat-icon>
+        {{ getLocationString() }}
+      </p>
+    </div>
+
+    <form [formGroup]="applicationForm" (ngSubmit)="onSubmit()">
+      <!-- Resume Upload -->
+      <div class="upload-section">
+        <h4>
+          <mat-icon>description</mat-icon>
+          Resume (Optional but Recommended)
+        </h4>
+
+        @if (!resumeFileName) {
+        <div class="upload-area" (click)="fileInput.click()">
+          <mat-icon class="upload-icon">cloud_upload</mat-icon>
+          <p>Click to upload your resume</p>
+          <p class="upload-hint">PDF, DOC, DOCX up to 10MB</p>
+          <input #fileInput type="file" accept=".pdf,.doc,.docx" (change)="onResumeSelected($event)"
+            style="display: none;">
+        </div>
+        } @else {
+        <div class="file-preview">
+          <div class="file-info">
+            <mat-icon>description</mat-icon>
+            <span>{{ resumeFileName }}</span>
+            @if (resumeUploading) {
+            <mat-spinner diameter="20"></mat-spinner>
+            } @else if (resumeUrl) {
+            <mat-icon class="success-icon">check_circle</mat-icon>
+            }
+          </div>
+          @if (resumeUploading) {
+          <mat-progress-bar mode="indeterminate" class="upload-progress"></mat-progress-bar>
+          }
+          <button mat-button type="button" (click)="removeResume()" [disabled]="resumeUploading">
+            <mat-icon>delete</mat-icon>
+            Remove
+          </button>
+        </div>
+        }
+      </div>
+
+      <!-- Cover Letter -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Cover Letter</mat-label>
+        <textarea matInput formControlName="coverLetter" rows="6" 
+          placeholder="Tell the employer why you're interested in this position and what makes you a great fit..."
+          required></textarea>
+        <mat-hint>Minimum 50 characters</mat-hint>
+        <mat-error *ngIf="coverLetterControl?.invalid && coverLetterControl?.dirty">
+          {{ getCoverLetterErrorMessage() }}
+        </mat-error>
+      </mat-form-field>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <button mat-button (click)="onCancel()" [disabled]="isSubmitting()">
+      Cancel
+    </button>
+    <button mat-raised-button color="primary" (click)="onSubmit()" 
+      [disabled]="applicationForm.invalid || isSubmitting() || resumeUploading">
+      @if (isSubmitting()) {
+      <mat-spinner diameter="20" class="button-spinner"></mat-spinner>
+      <span>Submitting...</span>
+      } @else {
+      <mat-icon>send</mat-icon>
+      <span>Submit Application</span>
+      }
+    </button>
+  </mat-dialog-actions>
+</div>
