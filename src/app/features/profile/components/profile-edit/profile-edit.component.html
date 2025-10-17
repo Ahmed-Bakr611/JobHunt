@@ -1,3 +1,290 @@
-<p>
-  profile-edit works!
-</p>
+<div class="profile-edit-container">
+  <div class="header">
+    <h1>
+      <mat-icon>edit</mat-icon>
+      Edit Profile
+    </h1>
+    <p class="subtitle">Update your profile information</p>
+  </div>
+
+  @if (isLoading()) {
+  <div class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading profile...</p>
+  </div>
+  } @else {
+  <mat-card class="edit-card">
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+      
+      <!-- Profile Image Section -->
+      <div class="image-section">
+        <h3>
+          <mat-icon>account_circle</mat-icon>
+          Profile Picture
+        </h3>
+        
+        @if (!profileImagePreview && !profileImageUrl) {
+        <div class="upload-area" (click)="fileInput.click()">
+          <mat-icon class="upload-icon">cloud_upload</mat-icon>
+          <p>Click to upload profile picture</p>
+          <p class="upload-hint">PNG, JPG up to 5MB</p>
+          <input #fileInput type="file" accept="image/*" (change)="onProfileImageSelected($event)"
+            style="display: none;">
+        </div>
+        } @else {
+        <div class="image-preview">
+          <img [src]="profileImagePreview || profileImageUrl" alt="Profile preview">
+          @if (profileImageUploading) {
+          <div class="upload-overlay">
+            <mat-spinner diameter="30"></mat-spinner>
+            <p>Uploading...</p>
+          </div>
+          }
+          @if (profileImageUrl) {
+          <div class="upload-success">
+            <mat-icon>check_circle</mat-icon>
+          </div>
+          }
+          <button mat-icon-button (click)="removeProfileImage()" [disabled]="profileImageUploading">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+        }
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <!-- Basic Information -->
+      <div class="form-section">
+        <h3>Basic Information</h3>
+        
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Full Name</mat-label>
+            <input matInput formControlName="displayName" placeholder="Your full name" required>
+            <mat-icon matPrefix>person</mat-icon>
+            <mat-error *ngIf="profileForm.get('displayName')?.hasError('required')">
+              Name is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Phone Number</mat-label>
+            <input matInput formControlName="phone" placeholder="+1234567890">
+            <mat-icon matPrefix>phone</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Location</mat-label>
+            <input matInput formControlName="location" placeholder="City, Country">
+            <mat-icon matPrefix>location_on</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Bio</mat-label>
+          <textarea matInput formControlName="bio" rows="3" 
+            placeholder="Tell us about yourself..."></textarea>
+        </mat-form-field>
+      </div>
+
+      <!-- Job Seeker Specific Fields -->
+      @if (userRole() === 'seeker') {
+      <mat-divider></mat-divider>
+      
+      <div class="form-section">
+        <h3>Professional Information</h3>
+        
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Skills</mat-label>
+          <mat-chip-grid #chipGrid aria-label="Skills selection">
+            @for (skill of getSkills(); track skill) {
+            <mat-chip-row (removed)="removeSkill(skill)">
+              {{ skill }}
+              <button matChipRemove [attr.aria-label]="'remove ' + skill">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip-row>
+            }
+          </mat-chip-grid>
+          <input placeholder="Add skills..." 
+            [matChipInputFor]="chipGrid" 
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="addSkill($event)">
+          <mat-hint>Press Enter or comma to add skills</mat-hint>
+        </mat-form-field>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Experience</mat-label>
+            <textarea matInput formControlName="experience" rows="2" 
+              placeholder="Years of experience, previous roles..."></textarea>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Education</mat-label>
+            <textarea matInput formControlName="education" rows="2" 
+              placeholder="Degree, University..."></textarea>
+          </mat-form-field>
+        </div>
+
+        <!-- CV Upload -->
+        <div class="upload-section">
+          <h4>
+            <mat-icon>description</mat-icon>
+            Resume/CV
+          </h4>
+          
+          @if (!cvFileName && !cvUrl) {
+          <div class="upload-area" (click)="cvInput.click()">
+            <mat-icon class="upload-icon">cloud_upload</mat-icon>
+            <p>Click to upload your CV</p>
+            <p class="upload-hint">PDF, DOC, DOCX up to 10MB</p>
+            <input #cvInput type="file" accept=".pdf,.doc,.docx" (change)="onCvSelected($event)"
+              style="display: none;">
+          </div>
+          } @else {
+          <div class="file-preview">
+            <div class="file-info">
+              <mat-icon>description</mat-icon>
+              <span>{{ cvFileName || 'CV' }}</span>
+              @if (cvUploading) {
+              <mat-spinner diameter="20"></mat-spinner>
+              }
+              @if (cvUrl) {
+              <mat-icon class="success-icon">check_circle</mat-icon>
+              }
+            </div>
+            @if (cvUploading) {
+            <mat-progress-bar mode="indeterminate" class="upload-progress"></mat-progress-bar>
+            }
+            <button mat-button (click)="removeCv()" [disabled]="cvUploading">
+              <mat-icon>delete</mat-icon>
+              Remove
+            </button>
+          </div>
+          }
+        </div>
+      </div>
+      }
+
+      <!-- Company Specific Fields -->
+      @if (userRole() === 'company') {
+      <mat-divider></mat-divider>
+      
+      <div class="form-section">
+        <h3>Company Information</h3>
+        
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Company Name</mat-label>
+          <input matInput formControlName="companyName" placeholder="Your company name" required>
+          <mat-icon matPrefix>business</mat-icon>
+          <mat-error *ngIf="profileForm.get('companyName')?.hasError('required')">
+            Company name is required
+          </mat-error>
+        </mat-form-field>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Industry</mat-label>
+            <input matInput formControlName="industry" placeholder="Technology, Healthcare, Finance...">
+            <mat-icon matPrefix>category</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Company Size</mat-label>
+            <mat-select formControlName="companySize">
+              @for (size of companySizeOptions; track size) {
+              <mat-option [value]="size">{{ size }} employees</mat-option>
+              }
+            </mat-select>
+            <mat-icon matPrefix>groups</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Website</mat-label>
+            <input matInput formControlName="website" placeholder="https://yourcompany.com">
+            <mat-icon matPrefix>language</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Founded Year</mat-label>
+            <input matInput type="number" formControlName="foundedYear" 
+              [placeholder]="currentYear.toString()" min="1800" [max]="currentYear">
+            <mat-icon matPrefix>calendar_today</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Company Description</mat-label>
+          <textarea matInput formControlName="description" rows="4" 
+            placeholder="Describe your company, mission, and culture..."></textarea>
+        </mat-form-field>
+      </div>
+      }
+
+      <!-- Social Links -->
+      <mat-divider></mat-divider>
+      
+      <div class="form-section">
+        <h3>Social Links</h3>
+        
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>LinkedIn</mat-label>
+            <input matInput formControlName="linkedIn" 
+              placeholder="https://linkedin.com/in/yourprofile">
+            <mat-icon matPrefix>link</mat-icon>
+          </mat-form-field>
+
+          @if (userRole() === 'seeker') {
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>GitHub</mat-label>
+            <input matInput formControlName="github" 
+              placeholder="https://github.com/yourusername">
+            <mat-icon matPrefix>code</mat-icon>
+          </mat-form-field>
+          } @else {
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Twitter</mat-label>
+            <input matInput formControlName="twitter" 
+              placeholder="https://twitter.com/yourcompany">
+            <mat-icon matPrefix>link</mat-icon>
+          </mat-form-field>
+          }
+        </div>
+
+        @if (userRole() === 'seeker') {
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Portfolio</mat-label>
+          <input matInput formControlName="portfolio" 
+            placeholder="https://yourportfolio.com">
+          <mat-icon matPrefix>web</mat-icon>
+        </mat-form-field>
+        }
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button mat-button type="button" (click)="onCancel()" [disabled]="isSubmitting()">
+          Cancel
+        </button>
+        <button mat-raised-button color="primary" type="submit" 
+          [disabled]="profileForm.invalid || isSubmitting() || isUploading">
+          @if (isSubmitting()) {
+          <mat-spinner diameter="20" class="button-spinner"></mat-spinner>
+          <span>Saving...</span>
+          } @else {
+          <mat-icon>save</mat-icon>
+          <span>Save Changes</span>
+          }
+        </button>
+      </div>
+    </form>
+  </mat-card>
+  }
+</div>

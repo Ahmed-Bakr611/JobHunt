@@ -1,11 +1,14 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '@core/services/auth.service';
 
 @Component({
   selector: 'jb-profile',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule],
   template: `
     <div class="profile-container">
       <!-- Loading State -->
@@ -39,6 +42,12 @@ import { AuthService } from '@core/services/auth.service';
             <div class="header-info">
               <h1>{{ seeker.displayName }}</h1>
               <p class="subtitle">Job Seeker</p>
+            </div>
+            <div class="header-actions">
+              <button mat-raised-button color="primary" (click)="editProfile()">
+                <mat-icon>edit</mat-icon>
+                Edit Profile
+              </button>
             </div>
           </div>
         </div>
@@ -186,6 +195,12 @@ import { AuthService } from '@core/services/auth.service';
             <div class="header-info">
               <h1>{{ company.companyName }}</h1>
               <p class="subtitle">{{ company.displayName }}</p>
+            </div>
+            <div class="header-actions">
+              <button mat-raised-button color="primary" (click)="editProfile()">
+                <mat-icon>edit</mat-icon>
+                Edit Profile
+              </button>
             </div>
           </div>
         </div>
@@ -366,6 +381,13 @@ import { AuthService } from '@core/services/auth.service';
         display: flex;
         gap: 2rem;
         align-items: center;
+        justify-content: space-between;
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
       }
 
       .profile-avatar,
@@ -614,5 +636,10 @@ import { AuthService } from '@core/services/auth.service';
   ],
 })
 export class ProfileViewComponent {
-  authService = inject(AuthService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
+  editProfile(): void {
+    this.router.navigate(['/editProfile']);
+  }
 }

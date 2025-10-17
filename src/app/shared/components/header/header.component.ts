@@ -49,7 +49,7 @@ export class HeaderComponent {
       return [
         { label: 'Dashboard', route: '/company/dashboard' },
         { label: 'Jobs', route: '/company/jobs' },
-        { label: 'Post Job', route: '/company/post-job' }
+        { label: 'Post Job', route: '/company/post-job' },
       ];
     }
 
