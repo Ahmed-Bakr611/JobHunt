@@ -11,6 +11,9 @@ import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import { ApplicationService, Application, ApplicationStatus } from '@core/services/application.service';
 import { AuthService } from '@core/services/auth.service';
 
@@ -28,6 +31,9 @@ import { AuthService } from '@core/services/auth.service';
     MatTabsModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatOptionModule,
   ],
   templateUrl: './my-applications.component.html',
   styleUrls: ['./my-applications.component.css'],
@@ -181,6 +187,10 @@ export class MyApplicationsComponent implements OnInit, OnDestroy {
 
   viewJob(jobId: string): void {
     this.router.navigate(['/jobs', jobId]);
+  }
+
+  navigateToJobs(): void {
+    this.router.navigate(['/jobs']);
   }
 
   getApplicationStats() {

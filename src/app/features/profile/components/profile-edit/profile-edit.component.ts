@@ -13,6 +13,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { AuthService } from '@core/services/auth.service';
 import { ProfileService } from '@core/services/profile.service';
 import { CloudinaryService } from '@core/services/cloudinary.service';
@@ -34,6 +35,7 @@ import { SeekerProfile, CompanyProfile, UserRole } from '@shared/models/user.mod
     MatSnackBarModule,
     MatStepperModule,
     MatDividerModule,
+    MatProgressBarModule,
   ],
   templateUrl: './profile-edit.component.html',
   styleUrls: ['./profile-edit.component.css'],

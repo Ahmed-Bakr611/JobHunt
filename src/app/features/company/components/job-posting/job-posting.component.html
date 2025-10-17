@@ -9,12 +9,12 @@
 
   <mat-card class="posting-card">
     <mat-stepper #stepper [selectedIndex]="currentStep()" (selectionChange)="goToStep($event.selectedIndex)">
-      
+
       <!-- Step 1: Basic Information -->
       <mat-step [stepControl]="basicInfoForm" label="Basic Information">
         <form [formGroup]="basicInfoForm">
           <h2>Job Details</h2>
-          
+
           <div class="form-row">
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Job Title</mat-label>
@@ -82,10 +82,10 @@
       <mat-step [stepControl]="detailsForm" label="Job Details">
         <form [formGroup]="detailsForm">
           <h2>Job Description & Compensation</h2>
-          
+
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Job Description</mat-label>
-            <textarea matInput formControlName="description" rows="6" 
+            <textarea matInput formControlName="description" rows="6"
               placeholder="Describe the role, responsibilities, and what makes this opportunity special..."
               required></textarea>
             <mat-hint>Minimum 100 characters</mat-hint>
@@ -99,15 +99,14 @@
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Key Responsibilities</mat-label>
-            <textarea matInput formControlName="responsibilities" rows="4" 
-              placeholder="List the main responsibilities (one per line)..."
-              required></textarea>
+            <textarea matInput formControlName="responsibilities" rows="4"
+              placeholder="List the main responsibilities (one per line)..." required></textarea>
             <mat-hint>One responsibility per line</mat-hint>
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Benefits & Perks</mat-label>
-            <textarea matInput formControlName="benefits" rows="3" 
+            <textarea matInput formControlName="benefits" rows="3"
               placeholder="List benefits and perks (one per line)..."></textarea>
             <mat-hint>One benefit per line (optional)</mat-hint>
           </mat-form-field>
@@ -132,7 +131,7 @@
 
           <mat-divider></mat-divider>
           <h3>Salary Information (Optional)</h3>
-          
+
           <div class="form-row">
             <mat-form-field appearance="outline" class="third-width">
               <mat-label>Min Salary</mat-label>
@@ -171,7 +170,7 @@
       <mat-step [stepControl]="requirementsForm" label="Requirements">
         <form [formGroup]="requirementsForm">
           <h2>Skills & Requirements</h2>
-          
+
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Required Skills</mat-label>
             <mat-chip-grid #chipGrid aria-label="Skills selection">
@@ -184,30 +183,27 @@
               </mat-chip-row>
               }
             </mat-chip-grid>
-            <input placeholder="Add skills..." 
-              [matChipInputFor]="chipGrid" 
-              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-              (matChipInputTokenEnd)="addSkill($event)">
+            <input placeholder="Add skills..." [matChipInputFor]="chipGrid"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="addSkill($event)">
             <mat-hint>Press Enter or comma to add skills</mat-hint>
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Requirements</mat-label>
-            <textarea matInput formControlName="requirements" rows="4" 
-              placeholder="List specific requirements (one per line)..."
-              required></textarea>
+            <textarea matInput formControlName="requirements" rows="4"
+              placeholder="List specific requirements (one per line)..." required></textarea>
             <mat-hint>One requirement per line</mat-hint>
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Education Requirements</mat-label>
-            <textarea matInput formControlName="education" rows="2" 
+            <textarea matInput formControlName="education" rows="2"
               placeholder="Educational requirements (optional)..."></textarea>
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Experience Requirements</mat-label>
-            <textarea matInput formControlName="experience" rows="2" 
+            <textarea matInput formControlName="experience" rows="2"
               placeholder="Specific experience requirements (optional)..."></textarea>
           </mat-form-field>
 
@@ -233,7 +229,7 @@
           <div class="review-card">
             <h3>{{ currentJobData.title }}</h3>
             <p class="company-name">{{ currentJobData.companyName }}</p>
-            
+
             <div class="job-meta">
               <mat-chip>{{ getJobTypeLabel(currentJobData.type) }}</mat-chip>
               <mat-chip>{{ currentJobData.category }}</mat-chip>

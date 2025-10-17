@@ -13,6 +13,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { MatDividerModule } from '@angular/material/divider';
 import { JobService } from '@features/jobs/services/job.services';
 import { AuthService } from '@core/services/auth.service';
 import { Job, JobStatus } from '@shared/models/job.model';
@@ -33,6 +37,10 @@ import { Job, JobStatus } from '@shared/models/job.model';
     MatSnackBarModule,
     MatDialogModule,
     MatMenuModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatDividerModule,
   ],
   templateUrl: './job-management.component.html',
   styleUrls: ['./job-management.component.css'],
@@ -263,6 +271,10 @@ export class JobManagementComponent implements OnInit, OnDestroy {
 
   viewApplicants(jobId: string): void {
     this.router.navigate(['/company/applicants'], { queryParams: { jobId } });
+  }
+
+  navigateToPostJob(): void {
+    this.router.navigate(['/company/post-job']);
   }
 
   getJobStats() {

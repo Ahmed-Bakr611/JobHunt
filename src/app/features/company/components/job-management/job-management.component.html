@@ -69,7 +69,7 @@
     <mat-card-header>
       <div class="card-header-content">
         <mat-card-title>Your Jobs</mat-card-title>
-        <button mat-raised-button color="primary" (click)="router.navigate(['/company/post-job'])">
+        <button mat-raised-button color="primary" (click)="navigateToPostJob()">
           <mat-icon>add</mat-icon>
           Post New Job
         </button>
@@ -96,9 +96,9 @@
         <p>@if (selectedStatus === 'all') {
           You haven't posted any jobs yet.
         } @else {
-          No jobs with {{ getStatusLabel(selectedStatus as JobStatus) }} status.
+          No jobs with {{ getStatusLabel(selectedStatus) }} status.
         }</p>
-        <button mat-raised-button color="primary" (click)="router.navigate(['/company/post-job'])">
+        <button mat-raised-button color="primary" (click)="navigateToPostJob()">
           <mat-icon>add</mat-icon>
           Post Your First Job
         </button>

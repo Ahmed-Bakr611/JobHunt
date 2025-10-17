@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ApplicationService, CreateApplicationData } from '@core/services/application.service';
 import { CloudinaryService } from '@core/services/cloudinary.service';
 import { Job } from '@shared/models/job.model';
@@ -23,6 +24,7 @@ import { Job } from '@shared/models/job.model';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    MatProgressBarModule,
     MatSnackBarModule,
   ],
   templateUrl: './job-application-dialog.component.html',
@@ -206,5 +208,18 @@ export class JobApplicationDialogComponent implements OnInit {
       return `Cover letter must be at least ${minLength} characters (${actualLength}/${minLength})`;
     }
     return '';
+  }
+
+  getLocationString(): string {
+    const location = this.job?.location;
+    if (!location) return '';
+
+    const parts = [];
+    if (location.city) parts.push(location.city);
+    if (location.country) parts.push(location.country);
+    if (location.remote) parts.push('Remote');
+    if (location.hybrid) parts.push('Hybrid');
+
+    return parts.join(', ');
   }
 }

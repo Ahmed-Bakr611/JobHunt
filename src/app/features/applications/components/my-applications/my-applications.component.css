@@ -1,9 +1,10 @@
 .my-applications-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
+  padding: 1.5rem;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  min-height: 100vh;
+  min-height: calc(100vh - 64px);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .header {
@@ -12,87 +13,64 @@
 }
 
 .header h1 {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  margin: 0 0 0.5rem 0;
-  color: #333;
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
 }
 
 .subtitle {
   color: #666;
-  margin: 0;
   font-size: 1.1rem;
 }
 
 .loading-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  padding: 4rem 2rem;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  align-items: center;
+  padding: 3rem;
 }
 
-.loading-container p {
-  margin-top: 1rem;
-  color: #666;
-  font-size: 1.1rem;
-}
-
-/* Statistics Grid */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
+  gap: 1rem;
   margin-bottom: 2rem;
 }
 
 .stat-card {
   background: white;
   border-radius: 12px;
+  padding: 1.5rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+  transition: transform 0.2s ease;
 }
 
 .stat-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
 .stat-content {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  padding: 1rem;
+  gap: 0.5rem;
 }
 
-.stat-content mat-icon {
-  font-size: 2.5rem;
-  width: 2.5rem;
-  height: 2.5rem;
+.stat-content .number {
+  font-size: 2rem;
+  font-weight: 700;
   color: #667eea;
 }
 
-.stat-content h3 {
-  margin: 0;
-  font-size: 2rem;
-  font-weight: 600;
-  color: #333;
-}
-
-.stat-content p {
-  margin: 0;
+.stat-content .label {
   color: #666;
   font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-/* Applications Card */
 .applications-card {
   background: white;
   border-radius: 12px;
@@ -100,197 +78,66 @@
   overflow: hidden;
 }
 
-.applications-card mat-card-header {
-  background: #f8f9ff;
+.filter-section {
   padding: 1.5rem;
   border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
 }
 
-.applications-card mat-card-title {
-  margin: 0;
-  color: #333;
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-.filter-section {
-  margin-bottom: 1.5rem;
-  padding: 0 1rem;
-}
-
-.filter-section mat-form-field {
-  width: 250px;
-}
-
-/* Table Styles */
-.table-container {
-  overflow-x: auto;
-  margin-bottom: 1rem;
-}
-
-.applications-table {
-  width: 100%;
-  background: white;
-}
-
-.applications-table th {
-  background: #f8f9ff;
-  color: #333;
-  font-weight: 600;
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.applications-table td {
-  padding: 1rem 0.5rem;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.job-info h4 {
-  margin: 0 0 0.25rem 0;
-  color: #333;
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.company-name {
-  margin: 0;
-  color: #666;
-  font-size: 0.875rem;
-}
-
-/* Status Chips */
-.status-pending {
-  background: #fff3cd;
-  color: #856404;
-}
-
-.status-reviewing {
-  background: #d1ecf1;
-  color: #0c5460;
-}
-
-.status-accepted {
-  background: #d4edda;
-  color: #155724;
-}
-
-.status-rejected {
-  background: #f8d7da;
-  color: #721c24;
-}
-
-.status-default {
-  background: #e9ecef;
-  color: #495057;
-}
-
-/* Empty State */
 .empty-state {
   text-align: center;
-  padding: 4rem 2rem;
+  padding: 3rem 1rem;
   color: #666;
 }
 
 .empty-state mat-icon {
   font-size: 4rem;
-  width: 4rem;
-  height: 4rem;
   color: #ccc;
   margin-bottom: 1rem;
 }
 
 .empty-state h3 {
-  margin: 1rem 0;
+  margin-bottom: 0.5rem;
   color: #333;
-  font-size: 1.25rem;
 }
 
-.empty-state p {
-  margin: 0.5rem 0 2rem 0;
-  line-height: 1.5;
+.table-container {
+  overflow-x: auto;
 }
 
-.empty-state button {
+.applications-table {
+  width: 100%;
+}
+
+.job-info {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin: 0 auto;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
-/* Responsive Design */
+.company-name {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
   .my-applications-container {
     padding: 1rem;
   }
   
   .header h1 {
-    font-size: 1.5rem;
+    font-size: 2rem;
   }
   
   .stats-grid {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1rem;
   }
   
-  .stat-content {
+  .filter-section {
     flex-direction: column;
-    text-align: center;
-    gap: 0.5rem;
-  }
-  
-  .stat-content mat-icon {
-    font-size: 2rem;
-    width: 2rem;
-    height: 2rem;
-  }
-  
-  .stat-content h3 {
-    font-size: 1.5rem;
-  }
-  
-  .filter-section mat-form-field {
-    width: 100%;
-  }
-  
-  .applications-table {
-    font-size: 0.875rem;
-  }
-  
-  .applications-table td {
-    padding: 0.75rem 0.25rem;
-  }
-  
-  .job-info h4 {
-    font-size: 0.9rem;
-  }
-  
-  .company-name {
-    font-size: 0.8rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .my-applications-container {
-    padding: 0.5rem;
-  }
-  
-  .stats-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .applications-table th,
-  .applications-table td {
-    padding: 0.5rem 0.25rem;
-  }
-  
-  .displayedColumns {
-    display: none;
-  }
-  
-  .displayedColumns:first-child,
-  .displayedColumns:last-child {
-    display: table-cell;
+    align-items: stretch;
   }
 }

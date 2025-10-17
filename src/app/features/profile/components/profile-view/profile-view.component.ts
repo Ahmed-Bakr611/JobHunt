@@ -636,7 +636,7 @@ import { AuthService } from '@core/services/auth.service';
   ],
 })
 export class ProfileViewComponent {
-  private authService = inject(AuthService);
+  authService = inject(AuthService);
   private router = inject(Router);
 
   editProfile(): void {

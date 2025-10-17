@@ -90,9 +90,9 @@
         <p>@if (selectedStatus === 'all') {
           You haven't applied to any jobs yet.
         } @else {
-          No applications with {{ getStatusLabel(selectedStatus as ApplicationStatus) }} status.
+          No applications with {{ getStatusLabel(selectedStatus) }} status.
         }</p>
-        <button mat-raised-button color="primary" (click)="router.navigate(['/jobs'])">
+        <button mat-raised-button color="primary" (click)="navigateToJobs()">
           <mat-icon>search</mat-icon>
           Browse Jobs
         </button>
