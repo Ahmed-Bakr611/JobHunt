@@ -140,14 +140,9 @@ export class LoginComponent implements OnInit {
   async signInWithGoogle(): Promise<void> {
     this.isLoading.set(true);
     try {
-      // Default to 'seeker' role for Google sign-in
-      await this.authService.signInWithGoogle('seeker');
-      this.navigateToHome();
-      this.snackBar.open('Login successful!', 'Close', {
-        duration: 3000,
-        horizontalPosition: 'end',
-        verticalPosition: 'top',
-      });
+      // Start Google sign-in without role - will redirect to role selection for new users
+      await this.authService.signInWithGoogleForRoleSelection();
+      // Navigation will be handled by the auth service based on user status
     } catch (error) {
       const errorMessage = this.authService.error() || 'Google sign-in failed. Please try again.';
       this.snackBar.open(errorMessage, 'Close', {

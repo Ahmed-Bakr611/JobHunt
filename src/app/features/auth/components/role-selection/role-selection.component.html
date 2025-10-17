@@ -1,20 +1,56 @@
-<div class="container section-padding page-container">
-  <mat-card class="auth-card">
+<div class="role-selection-container">
+  <mat-card class="role-selection-card">
     <mat-card-header>
       <mat-card-title>
-        <mat-icon>people</mat-icon>
-        Role Selection - Under Construction
+        <mat-icon>person_add</mat-icon>
+        Choose Your Role
       </mat-card-title>
+      <mat-card-subtitle>Select how you'd like to use our platform</mat-card-subtitle>
     </mat-card-header>
+
     <mat-card-content>
-      <p>Role selection will allow users to choose between:</p>
-      <ul>
-        <li>Job Seeker - Browse and apply for jobs</li>
-        <li>Company - Post jobs and manage applications</li>
-      </ul>
+      <form [formGroup]="roleForm" (ngSubmit)="onRoleSelected()">
+        <div class="role-selection">
+          <mat-radio-group formControlName="role" class="role-options">
+            <mat-radio-button value="seeker" class="role-option">
+              <div class="role-content">
+                <mat-icon>person_search</mat-icon>
+                <div class="role-info">
+                  <h3>Job Seeker</h3>
+                  <p>I'm looking for job opportunities and want to apply to positions</p>
+                </div>
+              </div>
+            </mat-radio-button>
+
+            <mat-radio-button value="company" class="role-option">
+              <div class="role-content">
+                <mat-icon>business</mat-icon>
+                <div class="role-info">
+                  <h3>Company</h3>
+                  <p>I'm hiring and want to post job openings</p>
+                </div>
+              </div>
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+
+        <div class="form-actions">
+          <button mat-button type="button" (click)="goBackToLogin()">
+            <mat-icon>arrow_back</mat-icon>
+            Back to Login
+          </button>
+          
+          <button mat-raised-button color="primary" type="submit" [disabled]="isLoading()">
+            @if (isLoading()) {
+            <mat-icon>hourglass_empty</mat-icon>
+            <span>Creating Account...</span>
+            } @else {
+            <mat-icon>check</mat-icon>
+            <span>Continue</span>
+            }
+          </button>
+        </div>
+      </form>
     </mat-card-content>
-    <mat-card-actions>
-      <button mat-button routerLink="/auth/register">Back to Register</button>
-    </mat-card-actions>
   </mat-card>
 </div>

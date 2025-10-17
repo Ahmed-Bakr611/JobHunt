@@ -445,6 +445,91 @@ export class AuthService {
   }
 
   /**
+   * Sign in with Google for role selection (new users)
+   */
+  async signInWithGoogleForRoleSelection(): Promise<void> {
+    try {
+      this.loadingSignal.set(true);
+      this.errorSignal.set(null);
+
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({
+        prompt: 'select_account',
+      });
+
+      console.log('🔄 Starting Google sign-in for role selection...');
+
+      try {
+        // Use popup method
+        const userCredential = await signInWithPopup(this.auth, provider);
+        console.log('✅ Google sign-in popup success:', userCredential.user);
+
+        // Check if user exists
+        const uid = userCredential.user.uid;
+        const userInfoResponse = await firstValueFrom(
+          this.crudService.getById<UserInfo>(COLLECTIONS.Users, uid)
+        );
+
+        if (userInfoResponse.success && userInfoResponse.data) {
+          // Existing user - load their profile
+          console.log('📂 Existing user found, loading profile...');
+          await this.handleAuthenticatedUser(userCredential.user, userInfoResponse.data.role);
+        } else {
+          // New user - redirect to role selection
+          console.log('🆕 New user detected, redirecting to role selection...');
+          this.router.navigate(['/auth/role-selection']);
+        }
+      } catch (popupError: any) {
+        console.error('❌ Popup sign-in failed:', popupError);
+
+        // If popup was blocked, fallback to redirect
+        if (
+          popupError.code === 'auth/popup-blocked' ||
+          popupError.code === 'auth/popup-closed-by-user' ||
+          popupError.code === 'auth/cancelled-popup-request'
+        ) {
+          console.log('⚠️ Popup blocked or closed, using redirect method...');
+          sessionStorage.setItem('pendingRoleSelection', 'true');
+          await signInWithRedirect(this.auth, provider);
+          return; // Exit, redirect will handle the rest
+        }
+
+        throw popupError;
+      }
+    } catch (error: unknown) {
+      console.error('🔥 Error in signInWithGoogleForRoleSelection:', error);
+      const message = this.getErrorMessage(error, 'Google sign in failed');
+      this.errorSignal.set(message);
+      this.loadingSignal.set(false);
+      throw error;
+    }
+  }
+
+  /**
+   * Complete Google sign-in for new users (after role selection)
+   */
+  async completeGoogleSignIn(role: UserRole): Promise<void> {
+    try {
+      this.loadingSignal.set(true);
+      this.errorSignal.set(null);
+
+      const currentUser = this.auth.currentUser;
+      if (!currentUser) {
+        throw new Error('No authenticated user found');
+      }
+
+      console.log('🔄 Completing Google sign-in for new user...');
+      await this.handleAuthenticatedUser(currentUser, role);
+    } catch (error: unknown) {
+      console.error('🔥 Error completing Google sign-in:', error);
+      const message = this.getErrorMessage(error, 'Failed to complete registration');
+      this.errorSignal.set(message);
+      this.loadingSignal.set(false);
+      throw error;
+    }
+  }
+
+  /**
    * Check for redirect result after user returns from Google
    */
   private async checkRedirectResult(): Promise<void> {
@@ -461,16 +546,37 @@ export class AuthService {
       console.log('✅ Google sign-in redirect success:', result.user);
       this.loadingSignal.set(true);
 
-      // Get stored role from sessionStorage
-      const role = (sessionStorage.getItem('pendingRole') as UserRole) || 'seeker';
-      sessionStorage.removeItem('pendingRole');
+      // Check if this is for role selection
+      const isRoleSelection = sessionStorage.getItem('pendingRoleSelection');
+      if (isRoleSelection) {
+        sessionStorage.removeItem('pendingRoleSelection');
+        // Check if user exists
+        const uid = result.user.uid;
+        const userInfoResponse = await firstValueFrom(
+          this.crudService.getById<UserInfo>(COLLECTIONS.Users, uid)
+        );
 
-      await this.handleAuthenticatedUser(result.user, role);
+        if (userInfoResponse.success && userInfoResponse.data) {
+          // Existing user - load their profile
+          console.log('📂 Existing user found, loading profile...');
+          await this.handleAuthenticatedUser(result.user, userInfoResponse.data.role);
+        } else {
+          // New user - redirect to role selection
+          console.log('🆕 New user detected, redirecting to role selection...');
+          this.router.navigate(['/auth/role-selection']);
+        }
+      } else {
+        // Legacy flow with stored role
+        const role = (sessionStorage.getItem('pendingRole') as UserRole) || 'seeker';
+        sessionStorage.removeItem('pendingRole');
+        await this.handleAuthenticatedUser(result.user, role);
+      }
     } catch (error: unknown) {
       console.error('🔥 Error handling redirect result:', error);
       const message = this.getErrorMessage(error, 'Authentication failed');
       this.errorSignal.set(message);
       sessionStorage.removeItem('pendingRole');
+      sessionStorage.removeItem('pendingRoleSelection');
     } finally {
       this.loadingSignal.set(false);
     }
