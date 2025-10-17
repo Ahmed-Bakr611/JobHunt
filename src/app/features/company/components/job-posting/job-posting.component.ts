@@ -15,7 +15,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatDividerModule } from '@angular/material/divider';
 import { JobService } from '@features/jobs/services/job.services';
 import { AuthService } from '@core/services/auth.service';
-import { CreateJobData, JobType, ExperienceLevel } from '@shared/models/job.model';
+import { CreateJobData, JobType, ExperienceLevel, Job } from '@shared/models/job.model';
 
 @Component({
   selector: 'jb-job-posting',
@@ -180,6 +180,7 @@ export class JobPostingComponent implements OnInit {
       const skills = [...this.getSkills(), value];
       this.requirementsForm.patchValue({ skills: skills.join(', ') });
     }
+
     event.chipInput.clear();
   }
 
@@ -204,7 +205,7 @@ export class JobPostingComponent implements OnInit {
 
     try {
       const jobData = this.prepareJobData();
-      const response = await this.jobService.create(jobData).toPromise();
+      const response = await this.jobService.create(jobData as Job).toPromise();
 
       if (response?.success) {
         this.snackBar.open('Job posted successfully!', 'Close', {
@@ -237,7 +238,9 @@ export class JobPostingComponent implements OnInit {
       title: basicInfo.title,
       description: details.description,
       responsibilities: details.responsibilities.split('\n').filter((r: string) => r.trim()),
-      benefits: details.benefits ? details.benefits.split('\n').filter((b: string) => b.trim()) : [],
+      benefits: details.benefits
+        ? details.benefits.split('\n').filter((b: string) => b.trim())
+        : [],
       requirements: requirements.requirements.split('\n').filter((r: string) => r.trim()),
       skills: this.getSkills(),
       location: {
@@ -259,7 +262,6 @@ export class JobPostingComponent implements OnInit {
       category: basicInfo.category,
       experienceLevel: details.experienceLevel,
       numberOfPositions: details.numberOfPositions,
-      status: 'active',
     };
   }
 

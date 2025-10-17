@@ -49,7 +49,6 @@ export class HeaderComponent {
       return [
         { label: 'Dashboard', route: '/company/dashboard' },
         { label: 'Jobs', route: '/company/jobs' },
-        { label: 'Post Job', route: '/company/post-job' },
       ];
     }
 
@@ -57,7 +56,6 @@ export class HeaderComponent {
     return [
       { label: 'Jobs', route: '/jobs' },
       { label: 'My Applications', route: '/applications' },
-      { label: 'Profile', route: '/profile' },
     ];
   });
   async signOut() {

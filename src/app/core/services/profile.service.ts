@@ -1,9 +1,10 @@
 // src/app/core/services/profile.service.ts
 import { Injectable, signal, computed, inject, effect } from '@angular/core';
-import { doc, getDoc, setDoc, updateDoc } from '@angular/fire/firestore';
+import { collection, doc, getDoc, setDoc, updateDoc } from '@angular/fire/firestore';
 import { Firestore } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
 import { SeekerProfile, CompanyProfile } from '@shared/models/profile.model';
+import { COLLECTIONS } from '@fb/const';
 
 @Injectable({
   providedIn: 'root',
@@ -124,7 +125,7 @@ export class ProfileService {
    */
   private async loadCompanyProfile(uid: string): Promise<void> {
     try {
-      const profileDoc = await getDoc(doc(this.db, 'users', uid));
+      const profileDoc = await getDoc(doc(this.db, COLLECTIONS.Users, uid));
 
       if (profileDoc.exists()) {
         const data = profileDoc.data();
@@ -165,7 +166,7 @@ export class ProfileService {
       this.loadingSignal.set(true);
       this.errorSignal.set(null);
 
-      const profileRef = doc(this.db, 'seekerProfiles', uid);
+      const profileRef = doc(this.db, COLLECTIONS.SeekerProfile, uid);
       const profileDoc = await getDoc(profileRef);
 
       const timestamp = new Date().toISOString();
@@ -207,7 +208,7 @@ export class ProfileService {
       this.loadingSignal.set(true);
       this.errorSignal.set(null);
 
-      const profileRef = doc(this.db, 'companyProfiles', uid);
+      const profileRef = doc(this.db, COLLECTIONS.CompanyProfile, uid);
       const profileDoc = await getDoc(profileRef);
 
       const timestamp = new Date().toISOString();

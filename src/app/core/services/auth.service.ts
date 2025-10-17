@@ -732,6 +732,65 @@ export class AuthService {
    * Update user profile
    * Updates both users collection and role-specific profile collection
    */
+  // async updateUserProfile(updates: Partial<SeekerProfile | CompanyProfile>): Promise<void> {
+  //   const user = this.currentUser();
+  //   if (!user) {
+  //     throw new Error('No user logged in');
+  //   }
+
+  //   try {
+  //     this.loadingSignal.set(true);
+  //     this.errorSignal.set(null);
+
+  //     const timestamp = new Date().toISOString();
+  //     const profileCollection = this.getCollectionNameByRole(user.role);
+
+  //     // Update users collection
+  //     const userUpdateResponse = await firstValueFrom(
+  //       this.crudService.update<UserInfo>(COLLECTIONS.Users, user.uid, {
+  //         updatedAt: timestamp,
+  //       } as Partial<UserInfo>)
+  //     );
+
+  //     if (userUpdateResponse.success) {
+  //       console.log('✅ User info updated in users collection');
+
+  //       // Update role-specific collection
+  //       const profileUpdateResponse = await firstValueFrom(
+  //         this.crudService.update<SeekerProfile | CompanyProfile>(profileCollection, user.uid, {
+  //           ...updates,
+  //           updatedAt: timestamp,
+  //         } as Partial<SeekerProfile | CompanyProfile>)
+  //       );
+
+  //       if (profileUpdateResponse.success) {
+  //         console.log('✅ User profile updated in', profileCollection);
+  //         // Update local state
+  //         this.currentUserSignal.set({
+  //           ...user,
+  //           ...updates,
+  //           updatedAt: timestamp,
+  //         });
+  //       } else {
+  //         console.error('❌ Error updating user profile:', profileUpdateResponse.error);
+  //         this.errorSignal.set('Profile update failed');
+  //       }
+  //     } else {
+  //       console.error('❌ Error updating user info:', userUpdateResponse.error);
+  //       this.errorSignal.set('Failed to update user information');
+  //     }
+  //   } catch (error: unknown) {
+  //     const message = this.getErrorMessage(error, 'Profile update failed');
+  //     this.errorSignal.set(message);
+  //     throw error;
+  //   } finally {
+  //     this.loadingSignal.set(false);
+  //   }
+  // }
+  /**
+   * Update user profile
+   * Updates both users collection and role-specific profile collection
+   */
   async updateUserProfile(updates: Partial<SeekerProfile | CompanyProfile>): Promise<void> {
     const user = this.currentUser();
     if (!user) {
@@ -745,41 +804,55 @@ export class AuthService {
       const timestamp = new Date().toISOString();
       const profileCollection = this.getCollectionNameByRole(user.role);
 
-      // Update users collection
+      // Prepare updates for users collection (only basic fields)
+      const userInfoUpdates: Partial<UserInfo> = {
+        updatedAt: timestamp,
+      };
+
+      // Add displayName if it's being updated
+      if (updates.displayName) {
+        userInfoUpdates.displayName = updates.displayName;
+      }
+
+      // Update users collection with basic info only
+      console.log('📝 Updating users collection...');
       const userUpdateResponse = await firstValueFrom(
-        this.crudService.update<UserInfo>(COLLECTIONS.Users, user.uid, {
-          updatedAt: timestamp,
-        } as Partial<UserInfo>)
+        this.crudService.update<UserInfo>(COLLECTIONS.Users, user.uid, userInfoUpdates)
       );
 
-      if (userUpdateResponse.success) {
-        console.log('✅ User info updated in users collection');
-
-        // Update role-specific collection
-        const profileUpdateResponse = await firstValueFrom(
-          this.crudService.update<SeekerProfile | CompanyProfile>(profileCollection, user.uid, {
-            ...updates,
-            updatedAt: timestamp,
-          } as Partial<SeekerProfile | CompanyProfile>)
-        );
-
-        if (profileUpdateResponse.success) {
-          console.log('✅ User profile updated in', profileCollection);
-          // Update local state
-          this.currentUserSignal.set({
-            ...user,
-            ...updates,
-            updatedAt: timestamp,
-          });
-        } else {
-          console.error('❌ Error updating user profile:', profileUpdateResponse.error);
-          this.errorSignal.set('Profile update failed');
-        }
-      } else {
-        console.error('❌ Error updating user info:', userUpdateResponse.error);
-        this.errorSignal.set('Failed to update user information');
+      if (!userUpdateResponse.success) {
+        console.error('❌ Failed to update users collection:', userUpdateResponse.error);
+        throw new Error(userUpdateResponse.error || 'Failed to update user information');
       }
+
+      console.log('✅ User info updated in users collection');
+
+      // Update role-specific collection with all updates
+      console.log('📝 Updating profile collection:', profileCollection);
+      const profileUpdateResponse = await firstValueFrom(
+        this.crudService.update<SeekerProfile | CompanyProfile>(profileCollection, user.uid, {
+          ...updates,
+          updatedAt: timestamp,
+        })
+      );
+
+      if (!profileUpdateResponse.success) {
+        console.error('❌ Failed to update profile collection:', profileUpdateResponse.error);
+        throw new Error(profileUpdateResponse.error || 'Failed to update profile');
+      }
+
+      console.log('✅ User profile updated in', profileCollection);
+
+      // Update local state
+      this.currentUserSignal.set({
+        ...user,
+        ...updates,
+        updatedAt: timestamp,
+      });
+
+      console.log('✅ Profile update completed successfully');
     } catch (error: unknown) {
+      console.error('❌ Error in updateUserProfile:', error);
       const message = this.getErrorMessage(error, 'Profile update failed');
       this.errorSignal.set(message);
       throw error;

@@ -17,6 +17,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { AuthService } from '@core/services/auth.service';
 import { ProfileService } from '@core/services/profile.service';
 import { CloudinaryService } from '@core/services/cloudinary.service';
+import { FormChangeDetectionService } from '@core/services/formChangeDetection.service';
 import { SeekerProfile, CompanyProfile, UserRole } from '@shared/models/user.model';
 
 @Component({
@@ -45,13 +46,19 @@ export class ProfileEditComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private profileService = inject(ProfileService);
   private cloudinaryService = inject(CloudinaryService);
+  private changeDetectionService = inject(FormChangeDetectionService);
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
+
+  private readonly TRACKER_ID = 'profile-edit-form';
 
   // Form
   profileForm: FormGroup;
   isSubmitting = signal(false);
   isLoading = signal(false);
+
+  // Change detection - from service
+  hasChanges = signal(false);
 
   // User data
   userRole = signal<UserRole | null>(null);
@@ -82,13 +89,14 @@ export class ProfileEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Cleanup if needed
+    // Cleanup change detection tracker
+    this.changeDetectionService.stopTracking(this.TRACKER_ID);
   }
 
   async loadUserProfile(): Promise<void> {
     try {
       this.isLoading.set(true);
-      
+
       const role = this.authService.userRole();
       this.userRole.set(role);
 
@@ -127,13 +135,28 @@ export class ProfileEditComponent implements OnInit, OnDestroy {
       portfolio: [profile?.portfolio || ''],
     });
 
-    // Set existing image
+    // Set existing files
     if (profile?.photoURL) {
       this.profileImageUrl = profile.photoURL;
     }
     if (profile?.resumeURL) {
       this.cvUrl = profile.resumeURL;
     }
+
+    // Start tracking changes with service
+    const changesSignal = this.changeDetectionService.startTracking(
+      this.TRACKER_ID,
+      this.profileForm,
+      {
+        additionalFields: {
+          profileImageUrl: this.profileImageUrl,
+          cvUrl: this.cvUrl,
+        },
+      }
+    );
+
+    // Update local signal when service signal changes
+    this.hasChanges = changesSignal as any;
   }
 
   private initializeCompanyForm(profile: CompanyProfile | null): void {
@@ -154,6 +177,20 @@ export class ProfileEditComponent implements OnInit, OnDestroy {
     if (profile?.companyLogo) {
       this.profileImageUrl = profile.companyLogo;
     }
+
+    // Start tracking changes with service
+    const changesSignal = this.changeDetectionService.startTracking(
+      this.TRACKER_ID,
+      this.profileForm,
+      {
+        additionalFields: {
+          profileImageUrl: this.profileImageUrl,
+        },
+      }
+    );
+
+    // Update local signal when service signal changes
+    this.hasChanges = changesSignal as any;
   }
 
   // Profile Image Upload
@@ -207,6 +244,13 @@ export class ProfileEditComponent implements OnInit, OnDestroy {
         this.profileImageUrl = response.secure_url;
         this.profileImageUploading = false;
         this.profileImageProgress = 100;
+
+        // Update change detection
+        this.changeDetectionService.updateField(
+          this.TRACKER_ID,
+          'profileImageUrl',
+          this.profileImageUrl
+        );
       },
       error: (error) => {
         console.error('Profile image upload failed:', error);
@@ -226,6 +270,9 @@ export class ProfileEditComponent implements OnInit, OnDestroy {
     this.profileImagePreview = null;
     this.profileImageUrl = null;
     this.profileImageProgress = 0;
+
+    // Update change detection
+    this.changeDetectionService.updateField(this.TRACKER_ID, 'profileImageUrl', null);
   }
 
   // CV Upload (Job Seekers Only)
@@ -278,6 +325,9 @@ export class ProfileEditComponent implements OnInit, OnDestroy {
         this.cvUrl = response.secure_url;
         this.cvUploading = false;
         this.cvProgress = 100;
+
+        // Update change detection
+        this.changeDetectionService.updateField(this.TRACKER_ID, 'cvUrl', this.cvUrl);
       },
       error: (error) => {
         console.error('CV upload failed:', error);
@@ -297,6 +347,9 @@ export class ProfileEditComponent implements OnInit, OnDestroy {
     this.cvFileName = null;
     this.cvUrl = null;
     this.cvProgress = 0;
+
+    // Update change detection
+    this.changeDetectionService.updateField(this.TRACKER_ID, 'cvUrl', null);
   }
 
   // Skills handling
@@ -310,13 +363,16 @@ export class ProfileEditComponent implements OnInit, OnDestroy {
   }
 
   removeSkill(skill: string): void {
-    const skills = this.getSkills().filter(s => s !== skill);
+    const skills = this.getSkills().filter((s) => s !== skill);
     this.profileForm.patchValue({ skills: skills.join(', ') });
   }
 
   getSkills(): string[] {
     const skillsValue = this.profileForm.get('skills')?.value || '';
-    return skillsValue.split(',').map((s: string) => s.trim()).filter((s: string) => s.length > 0);
+    return skillsValue
+      .split(',')
+      .map((s: string) => s.trim())
+      .filter((s: string) => s.length > 0);
   }
 
   // Submit profile
@@ -342,16 +398,48 @@ export class ProfileEditComponent implements OnInit, OnDestroy {
         (updates as Partial<SeekerProfile>).resumeURL = this.cvUrl;
       }
 
-      // Add form data
-      Object.keys(formData).forEach(key => {
+      // Add form data with proper type checking
+      Object.keys(formData).forEach((key) => {
+        const value = formData[key];
+
+        // Skip null, undefined, or empty values
+        if (value === null || value === undefined) {
+          return;
+        }
+
+        // Handle skills array for seekers
         if (key === 'skills' && this.userRole() === 'seeker') {
           (updates as any)[key] = this.getSkills();
-        } else if (formData[key] && formData[key].trim()) {
-          (updates as any)[key] = formData[key].trim();
+          return;
+        }
+
+        // Handle string values
+        if (typeof value === 'string') {
+          const trimmedValue = value.trim();
+          if (trimmedValue) {
+            (updates as any)[key] = trimmedValue;
+          }
+          return;
+        }
+
+        // Handle number values (like foundedYear)
+        if (typeof value === 'number') {
+          (updates as any)[key] = value;
+          return;
+        }
+
+        // Handle any other non-empty values
+        if (value) {
+          (updates as any)[key] = value;
         }
       });
 
+      console.log('📤 Submitting updates:', updates);
+
       await this.authService.updateUserProfile(updates);
+
+      // Reset change detection to current state after successful save
+      this.changeDetectionService.resetToCurrentState(this.TRACKER_ID, this.profileForm);
 
       this.snackBar.open('Profile updated successfully!', 'Close', {
         duration: 3000,
@@ -361,7 +449,12 @@ export class ProfileEditComponent implements OnInit, OnDestroy {
 
       this.router.navigate(['/profile']);
     } catch (error) {
-      this.snackBar.open('Failed to update profile. Please try again.', 'Close', {
+      console.error('❌ Profile update error:', error);
+
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to update profile. Please try again.';
+
+      this.snackBar.open(errorMessage, 'Close', {
         duration: 5000,
         horizontalPosition: 'end',
         verticalPosition: 'top',
