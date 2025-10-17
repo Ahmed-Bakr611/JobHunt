@@ -1,128 +1,534 @@
-.auth-container {
+/* // src/app/features/auth/components/register/register.component.scss */
+
+.register-container {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 2rem 1rem;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-.auth-card {
-  max-width: 450px;
-  width: 100%;
+.register-card {
+  background: white;
+  border-radius: 16px;
   padding: 2rem;
-}
-
-mat-card-header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-mat-card-title {
-  font-size: 2rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-
-mat-card-subtitle {
-  font-size: 1rem;
-  opacity: 0.7;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-mat-form-field {
   width: 100%;
-}
+  max-width: 800px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 
-.role-section {
-  margin: 0.5rem 0;
-}
+  h1 {
+    margin: 0 0 0.5rem;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+  }
 
-.role-label {
-  display: block;
-  font-size: 0.875rem;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-  color: rgba(0, 0, 0, 0.6);
-}
+  .subtitle {
+    margin: 0 0 1.5rem;
+    color: #666;
+    text-align: center;
+    font-size: 0.95rem;
+  }
 
-.role-group {
-  display: flex;
-  gap: 2rem;
-}
-
-.submit-btn {
-  width: 100%;
-  height: 48px;
-  font-size: 1rem;
-  margin-top: 1rem;
-}
-
-.divider {
-  margin: 1.5rem 0;
-  position: relative;
-  text-align: center;
-
-  span {
-    background: white;
-    padding: 0 1rem;
-    color: rgba(0, 0, 0, 0.54);
-    position: relative;
-    z-index: 1;
+  .orientation-hint {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    background: #f5f5f5;
+    border-radius: 8px;
   }
 }
 
-.google-btn {
-  width: 100%;
-  height: 48px;
-  font-size: 1rem;
+.register-stepper {
+  margin-top: 1.5rem;
+
+  h2 {
+    margin: 0 0 1.5rem;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #333;
+  }
+
+  h3 {
+    margin: 1.5rem 0 1rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #555;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  mat-form-field {
+    width: 100%;
+
+    mat-icon[matPrefix] {
+      margin-right: 0.5rem;
+      color: #667eea;
+    }
+  }
+}
+
+.role-selection {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 2rem 0;
+
+  .role-card {
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    &:hover {
+      border-color: #667eea;
+      background: #f8f9ff;
+    }
+
+    &.mat-radio-checked {
+      border-color: #667eea;
+      background: #f0f2ff;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+    }
+
+    .role-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 0.5rem;
+
+      mat-icon {
+        font-size: 3rem;
+        width: 3rem;
+        height: 3rem;
+        color: #667eea;
+      }
+
+      h3 {
+        margin: 0.5rem 0 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #333;
+      }
+
+      p {
+        margin: 0.25rem 0 0;
+        color: #666;
+        font-size: 0.9rem;
+      }
+    }
+  }
+}
+
+.social-links {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e0e0e0;
+
+  h3 {
+    margin-top: 0;
+  }
+}
+
+.stepper-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+
+  button {
+    flex: 1;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+
+    mat-icon {
+      margin-left: 0.5rem;
+      font-size: 1.25rem;
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    &[mat-button] {
+      mat-icon {
+        margin-left: 0;
+        margin-right: 0.5rem;
+      }
+    }
+  }
+}
+
+.confirmation-step {
+  text-align: center;
+  padding: 2rem 0;
+
+  .success-icon {
+    font-size: 4rem;
+    width: 4rem;
+    height: 4rem;
+    color: #4caf50;
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #333;
+  }
+
+  p {
+    margin: 0 0 2rem;
+    color: #666;
+  }
+
+  .review-card {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: left;
+
+    h3 {
+      margin: 0 0 1rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #667eea;
+    }
+
+    p {
+      margin: 0.5rem 0;
+      color: #555;
+      font-size: 0.95rem;
+
+      strong {
+        color: #333;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .error-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: #ffebee;
+    border: 1px solid #ffcdd2;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    color: #c62828;
+
+    mat-icon {
+      font-size: 1.25rem;
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+  }
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e0e0e0;
+  color: #666;
+  font-size: 0.95rem;
+
+  a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #764ba2;
+      text-decoration: underline;
+    }
+  }
+}
+
+/* // Responsive styles */
+@media (max-width: 768px) {
+  .register-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .register-card {
+    padding: 1.5rem;
+    border-radius: 12px;
+
+    h1 {
+      font-size: 1.5rem;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+    }
+  }
+
+  .register-stepper {
+    h2 {
+      font-size: 1.25rem;
+    }
+  }
+
+  .role-selection {
+    .role-card {
+      padding: 1rem;
+
+      .role-content {
+        mat-icon {
+          font-size: 2.5rem;
+          width: 2.5rem;
+          height: 2.5rem;
+        }
+
+        h3 {
+          font-size: 1.1rem;
+        }
+      }
+    }
+  }
+
+  .stepper-actions {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
+  }
+}
+
+/* // Custom stepper styling */
+::ng-deep {
+  .register-stepper {
+    .mat-step-header {
+      .mat-step-icon {
+        background-color: #667eea;
+      }
+
+      .mat-step-icon-selected {
+        background-color: #667eea;
+      }
+
+      .mat-step-icon-state-done {
+        background-color: #4caf50;
+      }
+
+      .mat-step-label {
+        font-weight: 500;
+      }
+
+      .mat-step-label-selected {
+        font-weight: 600;
+      }
+    }
+
+    .mat-stepper-horizontal-line {
+      border-top-color: #e0e0e0;
+    }
+  }
+}
+
+/* Upload Section Styles */
+.upload-section {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  border: 2px dashed #e0e0e0;
+  border-radius: 12px;
+  background: #fafafa;
+}
+
+.upload-section h3 {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 0.5rem;
+  margin: 0 0 1rem 0;
+  color: #424242;
+  font-size: 1.1rem;
+  font-weight: 500;
 }
 
-.google-icon {
-  width: 20px;
-  height: 20px;
+.upload-section h3 mat-icon {
+  color: #1976d2;
 }
 
+/* Upload Area */
+.upload-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  border: 2px dashed #bdbdbd;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.upload-area:hover {
+  border-color: #1976d2;
+  background: #f5f9ff;
+}
+
+.upload-area .upload-icon {
+  font-size: 3rem;
+  width: 3rem;
+  height: 3rem;
+  color: #1976d2;
+  margin-bottom: 1rem;
+}
+
+.upload-area p {
+  margin: 0.5rem 0;
+  color: #424242;
+  font-size: 1rem;
+}
+
+.upload-area .upload-hint {
+  font-size: 0.875rem;
+  color: #757575;
+}
+
+/* Preview Area */
+.preview-area {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+.image-preview {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #e0e0e0;
+  background: white;
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.upload-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.upload-overlay p {
+  margin: 0;
+  color: #1976d2;
+  font-weight: 500;
+}
+
+.upload-success {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: white;
+  border-radius: 50%;
+  padding: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.upload-success mat-icon {
+  color: #4caf50;
+  font-size: 2rem;
+  width: 2rem;
+  height: 2rem;
+}
+
+/* File Chip */
+.file-chip {
+  min-width: 300px;
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+}
+
+.file-chip .success-icon {
+  color: #4caf50;
+}
+
+.upload-progress {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+/* Error Message */
 .error-message {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #f44336;
+  padding: 1rem;
   background: #ffebee;
-  padding: 0.75rem;
-  border-radius: 4px;
-  margin-bottom: 1rem;
-
-  mat-icon {
-    font-size: 1.25rem;
-    width: 1.25rem;
-    height: 1.25rem;
-  }
-
-  span {
-    font-size: 0.875rem;
-  }
+  border-radius: 8px;
+  color: #c62828;
+  margin: 1rem 0;
 }
 
-.auth-footer {
-  text-align: center;
-  margin-top: 1.5rem;
-
-  p {
-    margin: 0;
-    color: rgba(0, 0, 0, 0.6);
-  }
+.error-message mat-icon {
+  color: #c62828;
 }
 
-mat-spinner {
-  margin: 0 auto;
+/* Stepper Actions */
+.stepper-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .upload-section {
+    padding: 1rem;
+  }
+
+  .upload-area {
+    padding: 2rem 1rem;
+  }
+
+  .image-preview {
+    width: 150px;
+    height: 150px;
+  }
+
+  .file-chip {
+    min-width: auto;
+    max-width: 100%;
+  }
+
+  .stepper-actions {
+    flex-direction: column-reverse;
+  }
+
+  .stepper-actions button {
+    width: 100%;
+  }
 }

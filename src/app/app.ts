@@ -15,10 +15,18 @@ import { JobListComponent } from './features/jobs/components/job-list/job-list.c
 import { MOCK_JOBS } from './core/mocks/jobs.mock';
 import { ResponseVM } from '../FireBase/response.viewmodel';
 import { JsonPipe } from '@angular/common';
+import { TestUploadComponent } from './shared/components/test/test';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MatIconModule, HeaderComponent, FooterComponent, JsonPipe],
+  imports: [
+    RouterOutlet,
+    MatIconModule,
+    HeaderComponent,
+    FooterComponent,
+    JsonPipe,
+    TestUploadComponent,
+  ],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

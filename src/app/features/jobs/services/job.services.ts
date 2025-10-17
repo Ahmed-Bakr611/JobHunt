@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 export class JobService {
   private collectionName = 'jobs';
 
-  constructor(private firestoreService: FirestoreCrudService<Job>) {}
+  constructor(private firestoreService: FirestoreCrudService) {}
 
   getAll(page = 1, limit = 10, lastDoc?: any): Observable<ResponseVM<Job>> {
     return this.firestoreService.getAll(this.collectionName, page, limit, lastDoc);

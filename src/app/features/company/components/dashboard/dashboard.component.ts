@@ -6,8 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-  selector: 'app-dashboard',
-  standalone: true,
+  selector: 'jb-dashboard',
   imports: [CommonModule, RouterLink, MatCardModule, MatButtonModule, MatIconModule],
   template: `
     <div class="container section-padding page-container">

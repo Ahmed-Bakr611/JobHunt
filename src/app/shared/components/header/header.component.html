@@ -1,26 +1,32 @@
 <mat-toolbar color="primary">
   <a mat-button class="logo" routerLink="/jobs" routerLinkActive="active">
-    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon>
+    <mat-icon aria-hidden="false" fontIcon="home"></mat-icon>
     <span class="brand">Jobly</span>
   </a>
 
-
   <span class="spacer"></span>
 
-  <a mat-button routerLink="/jobs" routerLinkActive="active">Jobs</a>
+  @for (link of navLinks(); track link.route) {
+  @if (link.type === 'stroked') {
+  <a mat-stroked-button color="accent" [routerLink]="link.route" routerLinkActive="active">
+    {{ link.label }}
+  </a>
+  } @else if (link.type === 'button') {
+  <a mat-button [routerLink]="link.route" routerLinkActive="active">{{ link.label }}</a>
+  } @else {
+  <a mat-button [routerLink]="link.route" routerLinkActive="active">{{ link.label }}</a>
+  }
+  }
 
   @if (auth.isAuthenticated()) {
   <button mat-button [matMenuTriggerFor]="menu">
     <mat-icon>account_circle</mat-icon>
-    {{ auth.currentUser() ? auth.currentUser()?.displayName : 'Profile' }}
+    {{ auth.currentUser()?.displayName || 'Profile' }}
   </button>
 
   <mat-menu #menu="matMenu">
     <button mat-menu-item (click)="goToProfile()">Profile</button>
     <button mat-menu-item (click)="signOut()">Logout</button>
   </mat-menu>
-  } @else {
-  <a mat-button routerLink="/auth/login" routerLinkActive="active">Login</a>
-  <a mat-stroked-button color="accent" routerLink="/auth/register" routerLinkActive="active">Register</a>
   }
 </mat-toolbar>

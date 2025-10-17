@@ -8,4 +8,5 @@ export const environment = {
     appId: '1:261076727423:web:242a8914c6ba2e87bd714a',
     measurementId: 'G-DM5GXE2VXN',
   },
+  CLOUDINARY_URL: 'https://api.cloudinary.com/v1_1',
 };

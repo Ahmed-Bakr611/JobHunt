@@ -1,21 +1,168 @@
-.auth-card {
-  max-width: 500px;
-  margin: 0 auto;
-  text-align: center;
-}
-mat-card-title {
+/* src/app/auth/login/login.component.scss */
+
+.login-container {
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 1rem;
 }
-ul {
-  text-align: left;
-  margin: 20px 0;
+
+.login-card {
+  width: 100%;
+  max-width: 450px;
+  padding: 2rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+
+  mat-card-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    mat-card-title {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    mat-card-subtitle {
+      font-size: 1rem;
+      color: rgba(0, 0, 0, 0.6);
+      text-align: center;
+    }
+  }
+
+  mat-card-content {
+    padding: 0;
+  }
 }
-mat-card-actions {
+
+.full-width {
+  width: 100%;
+}
+
+mat-form-field {
+  margin-bottom: 0.5rem;
+
+  &.mat-mdc-form-field {
+    display: block;
+  }
+}
+
+.forgot-password {
+  text-align: right;
+  margin-bottom: 1.5rem;
+}
+
+.link {
+  color: #667eea;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #764ba2;
+    text-decoration: underline;
+  }
+}
+
+.submit-btn {
+  height: 48px;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  position: relative;
+
+  .button-spinner {
+    display: inline-block;
+    margin: 0 auto;
+  }
+}
+
+.divider-container {
   display: flex;
-  justify-content: center;
-  gap: 16px;
-  padding: 16px;
+  align-items: center;
+  margin: 1.5rem 0;
+  gap: 1rem;
+
+  mat-divider {
+    flex: 1;
+  }
+
+  .divider-text {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+}
+
+.google-btn {
+  height: 48px;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
+  /* // Target the Material button label wrapper */
+  ::ng-deep .mdc-button__label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+
+  .google-icon {
+    width: 20px;
+    height: 20px;
+    display: block;
+  }
+}
+
+.signup-link {
+  text-align: center;
+  font-size: 0.875rem;
+  color: rgba(0, 0, 0, 0.7);
+
+  .link {
+    font-weight: 500;
+  }
+}
+
+/* Error snackbar styling (add to global styles if needed) */
+::ng-deep .error-snackbar {
+  background-color: #f44336;
+  color: white;
+
+  .mat-mdc-snack-bar-label {
+    color: white;
+  }
+
+  .mat-mdc-button {
+    color: white;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .login-container {
+    padding: 0.5rem;
+  }
+
+  .login-card {
+    padding: 1.5rem;
+
+    mat-card-header {
+      mat-card-title {
+        font-size: 1.5rem;
+      }
+    }
+  }
 }

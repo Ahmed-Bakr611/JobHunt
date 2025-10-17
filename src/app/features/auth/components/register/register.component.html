@@ -1,111 +1,419 @@
-<div class="auth-container">
-  <mat-card class="auth-card">
-    <mat-card-header>
-      <mat-card-title>Join Jobly</mat-card-title>
-      <mat-card-subtitle>Create your account</mat-card-subtitle>
-    </mat-card-header>
+@let email = accountFormGroup.get('email');
+@let pass = accountFormGroup.get('password');
+@let confirmPass = accountFormGroup.get('confirmPassword');
 
-    <mat-card-content>
-      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-        <mat-form-field appearance="outline">
-          <mat-label>Full Name</mat-label>
-          <input matInput type="text" formControlName="displayName" placeholder="John Doe" required />
-          <mat-icon matPrefix>person</mat-icon>
-          @if (registerForm.get('displayName')?.hasError('required')) {
-          <mat-error>Name is required</mat-error>
-          }
-        </mat-form-field>
+<div class="register-container">
+  <div class="register-card">
+    <h1>Create Your Account</h1>
+    <p class="subtitle">Join our platform and find your next opportunity</p>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Email</mat-label>
-          <input matInput type="email" formControlName="email" placeholder="your@email.com" required />
-          <mat-icon matPrefix>email</mat-icon>
-          @if (registerForm.get('email')?.hasError('required')) {
-          <mat-error>Email is required</mat-error>
-          }
-          @if (registerForm.get('email')?.hasError('email')) {
-          <mat-error>Please enter a valid email</mat-error>
-          }
-        </mat-form-field>
+    @switch (stepperOrientation | async) {
+    @case ('horizontal') {
+    <div class="orientation-hint">Resize your screen to see different layouts</div>
+    }
+    @case ('vertical') {
+    <div class="orientation-hint">Vertical stepper for mobile-friendly registration</div>
+    }
+    }
 
-        <mat-form-field appearance="outline">
-          <mat-label>Password</mat-label>
-          <input matInput [type]="hidePassword() ? 'password' : 'text'" formControlName="password" required />
-          <mat-icon matPrefix>lock</mat-icon>
-          <button mat-icon-button matSuffix type="button" (click)="togglePassword()">
-            <mat-icon>{{
-              hidePassword() ? 'visibility_off' : 'visibility'
-              }}</mat-icon>
-          </button>
-          @if (registerForm.get('password')?.hasError('required')) {
-          <mat-error>Password is required</mat-error>
-          }
-          @if (registerForm.get('password')?.hasError('minlength')) {
-          <mat-error>Password must be at least 6 characters</mat-error>
-          }
-        </mat-form-field>
+    <mat-stepper class="register-stepper" [orientation]="(stepperOrientation | async)!" #stepper>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Confirm Password</mat-label>
-          <input matInput [type]="hideConfirmPassword() ? 'password' : 'text'" formControlName="confirmPassword"
-            required />
-          <mat-icon matPrefix>lock</mat-icon>
-          <button mat-icon-button matSuffix type="button" (click)="toggleConfirmPassword()">
-            <mat-icon>{{
-              hideConfirmPassword() ? 'visibility_off' : 'visibility'
-              }}</mat-icon>
-          </button>
-          @if (registerForm.get('confirmPassword')?.hasError('required')) {
-          <mat-error>Please confirm your password</mat-error>
-          }
-          @if (registerForm.hasError('passwordMismatch')) {
-          <mat-error>Passwords do not match</mat-error>
-          }
-        </mat-form-field>
+      <!-- Step 1: Account Information -->
+      <mat-step [stepControl]="accountFormGroup" label="Account Details">
+        <form [formGroup]="accountFormGroup">
+          <h2>Create Your Account</h2>
 
-        <div class="role-section">
-          <label class="role-label">I am a:</label>
-          <mat-radio-group formControlName="role" class="role-group">
-            <mat-radio-button value="seeker">Job Seeker</mat-radio-button>
-            <mat-radio-button value="company">Company</mat-radio-button>
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" formControlName="email" placeholder="your.email@example.com" required>
+            <mat-icon matPrefix>email</mat-icon>
+            @if (email?.hasError('email') && email?.touched) {
+            <mat-error>Please enter a valid email address</mat-error>
+            }
+            @if (email?.dirty && email?.hasError('required')) {
+            <mat-error>Email is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput [type]="hidePassword() ? 'password' : 'text'" formControlName="password" required>
+            <mat-icon matPrefix>lock</mat-icon>
+            <button type="button" mat-icon-button matSuffix (click)="togglePasswordVisibility($event)"
+              [attr.aria-label]="'Toggle password visibility'" [attr.aria-pressed]="!hidePassword()">
+              <mat-icon>{{hidePassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            @if (pass?.hasError('minlength') && pass?.touched) {
+            <mat-error>Password must be at least 6 characters</mat-error>
+            }
+            @if (pass?.dirty && pass?.hasError('required')) {
+            <mat-error>Password is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Confirm Password</mat-label>
+            <input matInput [type]="hideConfirmPassword() ? 'password' : 'text'" formControlName="confirmPassword"
+              required>
+            <mat-icon matPrefix>lock</mat-icon>
+            <button type="button" mat-icon-button matSuffix (click)="toggleConfirmPasswordVisibility($event)"
+              [attr.aria-label]="'Toggle password visibility'" [attr.aria-pressed]="!hideConfirmPassword()">
+              <mat-icon>{{hideConfirmPassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            @if (confirmPass?.hasError('required') && confirmPass?.dirty) {
+            <mat-error>Please confirm your password</mat-error>
+            }
+            @if (confirmPass?.hasError('passwordMismatch') && confirmPass?.dirty) {
+            <mat-error>Passwords do not match</mat-error>
+            }
+          </mat-form-field>
+
+          <div class="stepper-actions">
+            <button mat-raised-button color="primary" matStepperNext [disabled]="!accountFormGroup.valid">
+              Next
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+        </form>
+      </mat-step>
+
+      <!-- Step 2: Role Selection -->
+      <mat-step [stepControl]="roleFormGroup" label="Choose Your Role">
+        <form [formGroup]="roleFormGroup">
+          <h2>I want to...</h2>
+
+          <mat-radio-group formControlName="role" class="role-selection">
+            <mat-radio-button value="seeker" class="role-card">
+              <div class="role-content">
+                <mat-icon>person_search</mat-icon>
+                <h3>Find a Job</h3>
+                <p>I'm looking for job opportunities</p>
+              </div>
+            </mat-radio-button>
+
+            <mat-radio-button value="company" class="role-card">
+              <div class="role-content">
+                <mat-icon>business</mat-icon>
+                <h3>Post Jobs</h3>
+                <p>I'm hiring for my company</p>
+              </div>
+            </mat-radio-button>
           </mat-radio-group>
-        </div>
 
-        @if (authService.error()) {
-        <div class="error-message">
-          <mat-icon>error</mat-icon>
-          <span>{{ authService.error() }}</span>
-        </div>
-        }
+          <div class="stepper-actions">
+            <button mat-button matStepperPrevious>
+              <mat-icon>arrow_back</mat-icon>
+              Back
+            </button>
+            <button mat-raised-button color="primary" matStepperNext [disabled]="!roleFormGroup.valid">
+              Next
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+        </form>
+      </mat-step>
 
-        <button mat-raised-button color="primary" type="submit"
-          [disabled]="registerForm.invalid || authService.loading()" class="submit-btn">
-          @if (authService.loading()) {
-          <mat-spinner diameter="20"></mat-spinner>
-          } @else {
-          Create Account
+      <!-- Step 3a: Job Seeker Profile -->
+      @if (selectedRole === 'seeker') {
+      <mat-step [stepControl]="seekerProfileFormGroup" label="Your Profile">
+        <form [formGroup]="seekerProfileFormGroup">
+          <h2>Tell Us About Yourself</h2>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Full Name</mat-label>
+            <input matInput formControlName="displayName" placeholder="John Doe" required>
+            <mat-icon matPrefix>person</mat-icon>
+            @if (seekerProfileFormGroup.get('displayName')?.hasError('required')) {
+            <mat-error>Name is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Phone Number</mat-label>
+            <input matInput formControlName="phone" placeholder="+1234567890">
+            <mat-icon matPrefix>phone</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Location</mat-label>
+            <input matInput formControlName="location" placeholder="City, Country">
+            <mat-icon matPrefix>location_on</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Skills</mat-label>
+            <input matInput formControlName="skills" placeholder="JavaScript, React, Node.js">
+            <mat-icon matPrefix>code</mat-icon>
+            <mat-hint>Separate skills with commas</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Bio</mat-label>
+            <textarea matInput formControlName="bio" rows="3" placeholder="Tell us about yourself..."></textarea>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Experience</mat-label>
+            <textarea matInput formControlName="experience" rows="2"
+              placeholder="Years of experience, previous roles..."></textarea>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Education</mat-label>
+            <textarea matInput formControlName="education" rows="2" placeholder="Degree, University..."></textarea>
+          </mat-form-field>
+
+          <div class="social-links">
+            <h3>Social Links (Optional)</h3>
+
+            <mat-form-field appearance="outline">
+              <mat-label>LinkedIn</mat-label>
+              <input matInput formControlName="linkedIn" placeholder="https://linkedin.com/in/yourprofile">
+              <mat-icon matPrefix>link</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>GitHub</mat-label>
+              <input matInput formControlName="github" placeholder="https://github.com/yourusername">
+              <mat-icon matPrefix>code</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Portfolio</mat-label>
+              <input matInput formControlName="portfolio" placeholder="https://yourportfolio.com">
+              <mat-icon matPrefix>web</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <div class="stepper-actions">
+            <button mat-button matStepperPrevious>
+              <mat-icon>arrow_back</mat-icon>
+              Back
+            </button>
+            <button mat-raised-button color="primary" matStepperNext [disabled]="!seekerProfileFormGroup.valid">
+              Next
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+        </form>
+      </mat-step>
+      }
+
+      <!-- Step 3b: Company Profile -->
+      @if (selectedRole === 'company') {
+      <mat-step [stepControl]="companyProfileFormGroup" label="Company Profile">
+        <form [formGroup]="companyProfileFormGroup">
+          <h2>Tell Us About Your Company</h2>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Your Name</mat-label>
+            <input matInput formControlName="displayName" placeholder="John Doe" required>
+            <mat-icon matPrefix>person</mat-icon>
+            @if (companyProfileFormGroup.get('displayName')?.hasError('required')) {
+            <mat-error>Name is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Company Name</mat-label>
+            <input matInput formControlName="companyName" placeholder="Acme Corp" required>
+            <mat-icon matPrefix>business</mat-icon>
+            @if (companyProfileFormGroup.get('companyName')?.hasError('required')) {
+            <mat-error>Company name is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Industry</mat-label>
+            <input matInput formControlName="industry" placeholder="Technology, Healthcare, Finance...">
+            <mat-icon matPrefix>category</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Company Size</mat-label>
+            <mat-select formControlName="companySize">
+              @for (size of companySizeOptions; track size) {
+              <mat-option [value]="size">{{ size }} employees</mat-option>
+              }
+            </mat-select>
+            <mat-icon matPrefix>groups</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Location</mat-label>
+            <input matInput formControlName="location" placeholder="City, Country">
+            <mat-icon matPrefix>location_on</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Website</mat-label>
+            <input matInput formControlName="website" placeholder="https://yourcompany.com">
+            <mat-icon matPrefix>language</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Founded Year</mat-label>
+            <input matInput type="number" formControlName="foundedYear" [placeholder]="currentYear.toString()">
+            <mat-icon matPrefix>calendar_today</mat-icon>
+            @if (companyProfileFormGroup.get('foundedYear')?.hasError('min')) {
+            <mat-error>Year must be after 1800</mat-error>
+            }
+            @if (companyProfileFormGroup.get('foundedYear')?.hasError('max')) {
+            <mat-error>Year cannot be in the future</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Company Description</mat-label>
+            <textarea matInput formControlName="description" rows="4"
+              placeholder="Describe your company, mission, and culture..."></textarea>
+          </mat-form-field>
+
+          <div class="social-links">
+            <h3>Social Links (Optional)</h3>
+
+            <mat-form-field appearance="outline">
+              <mat-label>LinkedIn</mat-label>
+              <input matInput formControlName="linkedIn" placeholder="https://linkedin.com/company/yourcompany">
+              <mat-icon matPrefix>link</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Twitter</mat-label>
+              <input matInput formControlName="twitter" placeholder="https://twitter.com/yourcompany">
+              <mat-icon matPrefix>link</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <div class="stepper-actions">
+            <button mat-button matStepperPrevious>
+              <mat-icon>arrow_back</mat-icon>
+              Back
+            </button>
+            <button mat-raised-button color="primary" matStepperNext [disabled]="!companyProfileFormGroup.valid">
+              Next
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+        </form>
+      </mat-step>
+      }
+
+      <!-- Step 4: File Uploads -->
+      <mat-step [stepControl]="uploadFormGroup" label="Upload Files">
+        <form [formGroup]="uploadFormGroup">
+          <h2>Upload Your Files</h2>
+          <p class="subtitle">Add a profile picture and your CV (optional but recommended)</p>
+
+          <!-- Profile Image Upload -->
+          <div class="upload-section">
+            <h3>
+              <mat-icon>account_circle</mat-icon>
+              Profile Picture
+            </h3>
+
+            @if (!profileImagePreview) {
+            <div class="upload-area" (click)="fileInput.click()">
+              <mat-icon class="upload-icon">cloud_upload</mat-icon>
+              <p>Click to upload profile picture</p>
+              <p class="upload-hint">PNG, JPG up to 5MB</p>
+              <input #fileInput type="file" accept="image/*" (change)="onProfileImageSelected($event)"
+                style="display: none;">
+            </div>
+            } @else {
+            <div class="preview-area">
+              <div class="image-preview">
+                <img [src]="profileImagePreview" alt="Profile preview">
+                @if (profileImageUploading) {
+                <div class="upload-overlay">
+                  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                  <p>Uploading...</p>
+                </div>
+                }
+                @if (profileImageUrl) {
+                <div class="upload-success">
+                  <mat-icon>check_circle</mat-icon>
+                </div>
+                }
+              </div>
+              <button mat-stroked-button color="warn" (click)="removeProfileImage()" type="button"
+                [disabled]="profileImageUploading">
+                <mat-icon>delete</mat-icon>
+                Remove
+              </button>
+            </div>
+            }
+          </div>
+
+          <!-- CV Upload (Job Seekers Only) -->
+          @if (selectedRole === 'seeker') {
+          <div class="upload-section">
+            <h3>
+              <mat-icon>description</mat-icon>
+              Curriculum Vitae (CV)
+            </h3>
+
+            @if (!cvFileName) {
+            <div class="upload-area" (click)="cvInput.click()">
+              <mat-icon class="upload-icon">cloud_upload</mat-icon>
+              <p>Click to upload your CV</p>
+              <p class="upload-hint">PDF, DOC, DOCX up to 10MB</p>
+              <input #cvInput type="file" accept=".pdf,.doc,.docx" (change)="onCvSelected($event)"
+                style="display: none;">
+            </div>
+            } @else {
+            <div class="preview-area">
+              <mat-chip class="file-chip">
+                <mat-icon matChipAvatar>description</mat-icon>
+                {{ cvFileName }}
+                @if (cvUploading) {
+                <mat-icon matChipTrailingIcon>hourglass_empty</mat-icon>
+                }
+                @if (cvUrl) {
+                <mat-icon matChipTrailingIcon class="success-icon">check_circle</mat-icon>
+                }
+              </mat-chip>
+              @if (cvUploading) {
+              <mat-progress-bar mode="indeterminate" class="upload-progress"></mat-progress-bar>
+              }
+              <button mat-stroked-button color="warn" (click)="removeCv()" type="button" [disabled]="cvUploading">
+                <mat-icon>delete</mat-icon>
+                Remove
+              </button>
+            </div>
+            }
+          </div>
           }
-        </button>
-      </form>
 
-      <mat-divider class="divider">
-        <span>OR</span>
-      </mat-divider>
+          @if (authService.error(); as error) {
+          <div class="error-message">
+            <mat-icon>error</mat-icon>
+            <span>{{ error }}</span>
+          </div>
+          }
 
-      <button mat-stroked-button type="button" (click)="signUpWithGoogle()" [disabled]="authService.loading()"
-        class="google-btn">
-        <img src="assets/google-icon.svg" alt="Google" class="google-icon" />
-        Sign up with Google
-      </button>
+          <div class="stepper-actions">
+            <button mat-button matStepperPrevious [disabled]="isUploading">
+              <mat-icon>arrow_back</mat-icon>
+              Back
+            </button>
+            <button mat-raised-button color="primary" (click)="onSubmit()"
+              [disabled]="isLoading || !isFinalStepValid || isUploading">
+              @if (isLoading) {
+              <span>Creating Account...</span>
+              } @else {
+              <span>Complete Registration</span>
+              }
+              <mat-icon>check</mat-icon>
+            </button>
+          </div>
+        </form>
+      </mat-step>
 
-      <div class="auth-footer">
-        <p>
-          Already have an account?
-          <a routerLink="/auth/login" mat-button color="primary">
-            Sign In
-          </a>
-        </p>
-      </div>
-    </mat-card-content>
-  </mat-card>
+    </mat-stepper>
+
+    <div class="login-link">
+      Already have an account? <a routerLink="/auth/login">Sign in</a>
+    </div>
+  </div>
 </div>

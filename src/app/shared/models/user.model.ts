@@ -4,6 +4,10 @@
  * User role types
  */
 export type UserRole = 'seeker' | 'company';
+export enum Role {
+  Seeker = 'seeker',
+  Company = 'company',
+}
 
 /**
  * Base user interface
@@ -14,8 +18,8 @@ export interface User {
   displayName: string;
   photoURL?: string;
   role: UserRole;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 /**
@@ -25,12 +29,12 @@ export interface User {
 export interface SeekerProfile extends User {
   role: 'seeker';
   phone?: string;
-  resumeURL?: string;
-  skills: string[];
-  experience?: string;
-  education?: string;
   location?: string;
   bio?: string;
+  skills: string[]; // Array of skill strings
+  experience?: string;
+  education?: string;
+  resumeURL?: string; // CV/Resume file URL from Cloudinary
   linkedIn?: string;
   github?: string;
   portfolio?: string;
@@ -43,7 +47,7 @@ export interface SeekerProfile extends User {
 export interface CompanyProfile extends User {
   role: 'company';
   companyName: string;
-  companyLogo?: string;
+  companyLogo?: string; // Company logo image URL from Cloudinary
   industry?: string;
   companySize?: '1-10' | '11-50' | '51-200' | '201-500' | '501-1000' | '1000+';
   website?: string;
