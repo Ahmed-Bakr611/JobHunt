@@ -1,8 +1,6 @@
+// src/app/app.routes.ts
 import { Routes } from '@angular/router';
-import { JobListComponent } from './features/jobs/components/job-list/job-list.component';
-import { JobDetailsComponent } from './features/jobs/components/job-details/job-details';
 import { ProfileViewComponent } from './features/profile/components/profile-view/profile-view.component';
-import { ProfileEditComponent } from './features/profile/components/profile-edit/profile-edit.component';
 import { DashboardComponent } from './features/company/components/dashboard/dashboard.component';
 import { LoginComponent } from './features/auth/components/login/login.component';
 import { RegisterComponent } from './features/auth/components/register/register.component';
@@ -12,11 +10,13 @@ import { roleGuard } from './core/guards/role.guard';
 export const routes: Routes = [
   { path: '', redirectTo: '/jobs', pathMatch: 'full' },
 
-  // open for guests
-  { path: 'jobs', component: JobListComponent },
-  { path: 'jobs/:id', component: JobDetailsComponent },
+  // ✅ Lazy-load the jobs feature routes
+  {
+    path: 'jobs',
+    loadChildren: () => import('./features/jobs/jobs.routes').then((m) => m.JOBS_ROUTES),
+  },
 
-  // auth routes
+  // Auth routes
   {
     path: 'auth',
     children: [
@@ -25,7 +25,7 @@ export const routes: Routes = [
     ],
   },
 
-  // seeker-only routes
+  // Seeker-only routes
   {
     path: 'profile',
     component: ProfileViewComponent,
@@ -33,16 +33,22 @@ export const routes: Routes = [
   },
   {
     path: 'editProfile',
-    loadComponent: () => import('./features/profile/components/profile-edit/profile-edit.component').then((m) => m.ProfileEditComponent),
+    loadComponent: () =>
+      import('./features/profile/components/profile-edit/profile-edit.component').then(
+        (m) => m.ProfileEditComponent
+      ),
     canActivate: [authGuard],
   },
   {
     path: 'applications',
-    loadComponent: () => import('./features/applications/components/my-applications/my-applications.component').then((m) => m.MyApplicationsComponent),
+    loadComponent: () =>
+      import('./features/applications/components/my-applications/my-applications.component').then(
+        (m) => m.MyApplicationsComponent
+      ),
     canActivate: [authGuard],
   },
 
-  // company-only routes
+  // Company-only routes
   {
     path: 'company/dashboard',
     component: DashboardComponent,
@@ -50,12 +56,18 @@ export const routes: Routes = [
   },
   {
     path: 'company/post-job',
-    loadComponent: () => import('./features/company/components/job-posting/job-posting.component').then((m) => m.JobPostingComponent),
+    loadComponent: () =>
+      import('./features/company/components/job-posting/job-posting.component').then(
+        (m) => m.JobPostingComponent
+      ),
     canActivate: [authGuard, roleGuard(['company'])],
   },
   {
     path: 'company/jobs',
-    loadComponent: () => import('./features/company/components/job-management/job-management.component').then((m) => m.JobManagementComponent),
+    loadComponent: () =>
+      import('./features/company/components/job-management/job-management.component').then(
+        (m) => m.JobManagementComponent
+      ),
     canActivate: [authGuard, roleGuard(['company'])],
   },
 ];

@@ -14,8 +14,13 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
-import { ApplicationService, Application, ApplicationStatus } from '@core/services/application.service';
+import {
+  ApplicationService,
+  Application,
+  ApplicationStatus,
+} from '@core/services/application.service';
 import { AuthService } from '@core/services/auth.service';
+import { LoaderComponent } from '@app/shared/components/loader/loader.component';
 
 @Component({
   selector: 'jb-my-applications',
@@ -34,6 +39,7 @@ import { AuthService } from '@core/services/auth.service';
     MatFormFieldModule,
     MatSelectModule,
     MatOptionModule,
+    LoaderComponent,
   ],
   templateUrl: './my-applications.component.html',
   styleUrls: ['./my-applications.component.css'],
@@ -83,7 +89,7 @@ export class MyApplicationsComponent implements OnInit, OnDestroy {
     try {
       this.isLoading.set(true);
       await this.applicationService.loadMyApplications();
-      
+
       // Update data source
       this.dataSource = this.applicationService.myApplications();
       this.applyFilters();
@@ -105,14 +111,14 @@ export class MyApplicationsComponent implements OnInit, OnDestroy {
 
     // Filter by status
     if (this.selectedStatus !== 'all') {
-      filtered = filtered.filter(app => app.status === this.selectedStatus);
+      filtered = filtered.filter((app) => app.status === this.selectedStatus);
     }
 
     // Apply sorting
     filtered.sort((a, b) => {
       const aValue = this.getSortValue(a, this.sortField);
       const bValue = this.getSortValue(b, this.sortField);
-      
+
       if (this.sortDirection === 'asc') {
         return aValue > bValue ? 1 : -1;
       } else {
@@ -197,10 +203,10 @@ export class MyApplicationsComponent implements OnInit, OnDestroy {
     const applications = this.applicationService.myApplications();
     return {
       total: applications.length,
-      pending: applications.filter(app => app.status === 'pending').length,
-      reviewing: applications.filter(app => app.status === 'reviewing').length,
-      accepted: applications.filter(app => app.status === 'accepted').length,
-      rejected: applications.filter(app => app.status === 'rejected').length,
+      pending: applications.filter((app) => app.status === 'pending').length,
+      reviewing: applications.filter((app) => app.status === 'reviewing').length,
+      accepted: applications.filter((app) => app.status === 'accepted').length,
+      rejected: applications.filter((app) => app.status === 'rejected').length,
     };
   }
 

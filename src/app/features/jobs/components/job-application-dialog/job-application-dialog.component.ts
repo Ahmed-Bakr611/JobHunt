@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, Input, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
@@ -37,7 +37,7 @@ export class JobApplicationDialogComponent implements OnInit {
   private snackBar = inject(MatSnackBar);
   private dialogRef = inject(MatDialogRef<JobApplicationDialogComponent>);
 
-  job!: Job;
+  job = input<Job>();
   applicationForm: FormGroup;
   isLoading = signal(false);
   isSubmitting = signal(false);
@@ -58,7 +58,7 @@ export class JobApplicationDialogComponent implements OnInit {
 
   ngOnInit(): void {
     // Check if user has already applied
-    if (this.applicationService.hasAppliedToJob(this.job.id)) {
+    if (this.applicationService.hasAppliedToJob(this.job()?.id ?? '')) {
       this.snackBar.open('You have already applied to this job', 'Close', {
         duration: 3000,
         horizontalPosition: 'end',
@@ -112,7 +112,7 @@ export class JobApplicationDialogComponent implements OnInit {
     this.resumeUploading = true;
     this.resumeProgress = 0;
 
-        this.cloudinaryService.uploadFile(this.resumeFile, 'cvs').subscribe({
+    this.cloudinaryService.uploadFile(this.resumeFile, 'cvs').subscribe({
       next: (response) => {
         this.resumeUrl = response.secure_url;
         this.resumeUploading = false;
@@ -155,10 +155,10 @@ export class JobApplicationDialogComponent implements OnInit {
 
     try {
       const applicationData: CreateApplicationData = {
-        jobId: this.job.id,
-        companyId: this.job.companyId,
-        jobTitle: this.job.title,
-        companyName: this.job.companyName,
+        jobId: this.job()?.id ?? '',
+        companyId: this.job()?.companyId ?? '',
+        jobTitle: this.job()?.title ?? '',
+        companyName: this.job()?.companyName ?? '',
         resumeURL: this.resumeUrl || undefined,
         coverLetter: this.applicationForm.value.coverLetter,
       };
@@ -173,7 +173,8 @@ export class JobApplicationDialogComponent implements OnInit {
 
       this.dialogRef.close(true); // Return true to indicate success
     } catch (error) {
-      const errorMessage = this.applicationService.error() || 'Failed to submit application. Please try again.';
+      const errorMessage =
+        this.applicationService.error() || 'Failed to submit application. Please try again.';
       this.snackBar.open(errorMessage, 'Close', {
         duration: 5000,
         horizontalPosition: 'end',
@@ -211,7 +212,7 @@ export class JobApplicationDialogComponent implements OnInit {
   }
 
   getLocationString(): string {
-    const location = this.job?.location;
+    const location = this.job()?.location;
     if (!location) return '';
 
     const parts = [];

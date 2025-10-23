@@ -17,4 +17,12 @@ export const JOBS_ROUTES: Routes = [
     loadComponent: () =>
       import('./components/job-details/job-details').then((m) => m.JobDetailsComponent),
   },
+
+  {
+    path: 'apply',
+    loadComponent: () =>
+      import('./components/job-application-dialog/job-application-dialog.component').then(
+        (m) => m.JobApplicationDialogComponent
+      ),
+  },
 ];

@@ -10,6 +10,8 @@ import { Job } from '../../../../shared/models/job.model';
 import { TimeAgoPipe } from '../../../../shared/pipes/time-ago-pipe';
 import { SalaryFormatPipe } from '../../../../shared/pipes/salary-format-pipe';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { JobApplicationDialogComponent } from '../job-application-dialog/job-application-dialog.component';
 
 @Component({
   selector: 'jb-job-card',
@@ -34,7 +36,7 @@ export class JobCardComponent {
   cardClick = output<Job | undefined>();
   applyClick = output<Job | undefined>();
   saveClick = output<Job | undefined>();
-  constructor(private router: Router) {}
+  constructor(private router: Router, private dialog: MatDialog) {}
 
   onCardClick(): void {
     const currentJob = this.job();
@@ -50,7 +52,18 @@ export class JobCardComponent {
 
   onApplyClick(event: Event): void {
     event.stopPropagation();
-    this.applyClick.emit(this.job());
+    // this.applyClick.emit(this.job());
+    // this.router.navigate(['/jobs/apply']);
+    const dialogRef = this.dialog.open(JobApplicationDialogComponent, {
+      width: '600px',
+    });
+    dialogRef.componentInstance.job = this.job;
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log('✅ Application submitted for:', this.job()?.title);
+      }
+    });
   }
 
   onSaveClick(event: Event): void {

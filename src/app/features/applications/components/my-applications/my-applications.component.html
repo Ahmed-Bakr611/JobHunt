@@ -1,3 +1,7 @@
+@if (isLoading()) {
+<jb-loader />
+}
+@else {
 <div class="my-applications-container">
   <div class="header">
     <h1>
@@ -7,12 +11,7 @@
     <p class="subtitle">Track your job applications and their status</p>
   </div>
 
-  @if (isLoading()) {
-  <div class="loading-container">
-    <mat-spinner></mat-spinner>
-    <p>Loading your applications...</p>
-  </div>
-  } @else {
+
   <!-- Statistics Cards -->
   <div class="stats-grid">
     <mat-card class="stat-card">
@@ -89,9 +88,9 @@
         <h3>No Applications Found</h3>
         <p>@if (selectedStatus === 'all') {
           You haven't applied to any jobs yet.
-        } @else {
+          } @else {
           No applications with {{ getStatusLabel(selectedStatus) }} status.
-        }</p>
+          }</p>
         <button mat-raised-button color="primary" (click)="navigateToJobs()">
           <mat-icon>search</mat-icon>
           Browse Jobs
@@ -100,7 +99,8 @@
       } @else {
       <!-- Applications Table -->
       <div class="table-container">
-        <table mat-table [dataSource]="getPaginatedData()" matSort (matSortChange)="onSortChange($event)" class="applications-table">
+        <table mat-table [dataSource]="getPaginatedData()" matSort (matSortChange)="onSortChange($event)"
+          class="applications-table">
           <!-- Job Title Column -->
           <ng-container matColumnDef="jobTitle">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Job Title</th>
@@ -146,16 +146,12 @@
       </div>
 
       <!-- Pagination -->
-      <mat-paginator 
-        [length]="totalItems"
-        [pageSize]="pageSize"
-        [pageIndex]="pageIndex"
-        [pageSizeOptions]="[5, 10, 25, 50]"
-        (page)="onPageChange($event)"
-        showFirstLastButtons>
+      <mat-paginator [length]="totalItems" [pageSize]="pageSize" [pageIndex]="pageIndex"
+        [pageSizeOptions]="[5, 10, 25, 50]" (page)="onPageChange($event)" showFirstLastButtons>
       </mat-paginator>
       }
     </mat-card-content>
   </mat-card>
-  }
+
 </div>
+}

@@ -16,6 +16,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { JobService } from '@features/jobs/services/job.services';
 import { AuthService } from '@core/services/auth.service';
 import { CreateJobData, JobType, ExperienceLevel, Job } from '@shared/models/job.model';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'jb-job-posting',
@@ -33,6 +34,7 @@ import { CreateJobData, JobType, ExperienceLevel, Job } from '@shared/models/job
     MatSnackBarModule,
     MatStepperModule,
     MatDividerModule,
+    MatCheckboxModule, // ADD THIS
   ],
   templateUrl: './job-posting.component.html',
   styleUrls: ['./job-posting.component.css'],
@@ -229,42 +231,62 @@ export class JobPostingComponent implements OnInit {
     }
   }
 
-  private prepareJobData(): CreateJobData {
+  private prepareJobData(): Partial<Job> {
     const basicInfo = this.basicInfoForm.value;
     const details = this.detailsForm.value;
     const requirements = this.requirementsForm.value;
 
-    return {
+    // Prepare salary data - only include if values exist
+    const salaryData = details.salary;
+    const salary =
+      salaryData?.min || salaryData?.max
+        ? {
+            min: salaryData.min || null,
+            max: salaryData.max || null,
+            currency: salaryData.currency || 'USD',
+            period: salaryData.period || 'yearly',
+          }
+        : null;
+
+    const jobData: any = {
       title: basicInfo.title,
-      description: details.description,
-      responsibilities: details.responsibilities.split('\n').filter((r: string) => r.trim()),
-      benefits: details.benefits
-        ? details.benefits.split('\n').filter((b: string) => b.trim())
-        : [],
-      requirements: requirements.requirements.split('\n').filter((r: string) => r.trim()),
-      skills: this.getSkills(),
+      companyName: basicInfo.companyName,
+      type: basicInfo.type,
+      category: basicInfo.category,
       location: {
         city: basicInfo.location.city,
         country: basicInfo.location.country,
-        remote: basicInfo.location.remote,
-        hybrid: basicInfo.location.hybrid,
+        remote: basicInfo.location.remote || false,
+        hybrid: basicInfo.location.hybrid || false,
       },
-      salary:
-        details.salary.min && details.salary.max
-          ? {
-              min: details.salary.min,
-              max: details.salary.max,
-              currency: details.salary.currency,
-              period: details.salary.period,
-            }
-          : undefined,
-      type: basicInfo.type,
-      category: basicInfo.category,
+      description: details.description,
+      responsibilities: details.responsibilities?.split('\n').filter((r: string) => r.trim()) || [],
+      benefits: details.benefits?.split('\n').filter((b: string) => b.trim()) || [],
       experienceLevel: details.experienceLevel,
-      numberOfPositions: details.numberOfPositions,
+      numberOfPositions: details.numberOfPositions || 1,
+      requirements: requirements.requirements?.split('\n').filter((r: string) => r.trim()) || [],
+      skills: this.getSkills() || [],
+      status: 'active',
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
-  }
 
+    // Only add salary if it exists
+    if (salary) {
+      jobData.salary = salary;
+    }
+
+    // Add optional fields only if they have values
+    if (requirements.education?.trim()) {
+      jobData.education = requirements.education.trim();
+    }
+
+    if (requirements.experience?.trim()) {
+      jobData.experienceRequirements = requirements.experience.trim();
+    }
+
+    return jobData;
+  }
   // Getter methods for template
   get currentJobData() {
     return this.prepareJobData();

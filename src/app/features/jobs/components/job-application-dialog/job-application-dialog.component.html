@@ -1,15 +1,17 @@
+@let j = job();
+
 <div class="application-dialog">
   <h2 mat-dialog-title>
     <mat-icon>work</mat-icon>
-    Apply to {{ job?.title }}
+    Apply to {{ j?.title }}
   </h2>
 
   <mat-dialog-content>
     <div class="job-info">
-      <h3>{{ job?.companyName }}</h3>
+      <h3>{{ j?.companyName }}</h3>
       <p class="job-location">
         <mat-icon>location_on</mat-icon>
-        {{ job?.location?.city }}, {{ job?.location?.country }}
+        {{ j?.location?.city }}, {{ j?.location?.country }}
       </p>
     </div>
 
@@ -54,7 +56,7 @@
       <!-- Cover Letter -->
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Cover Letter</mat-label>
-        <textarea matInput formControlName="coverLetter" rows="6" 
+        <textarea matInput formControlName="coverLetter" rows="6"
           placeholder="Tell the employer why you're interested in this position and what makes you a great fit..."
           required></textarea>
         <mat-hint>Minimum 50 characters</mat-hint>
@@ -69,7 +71,7 @@
     <button mat-button (click)="onCancel()" [disabled]="isSubmitting()">
       Cancel
     </button>
-    <button mat-raised-button color="primary" (click)="onSubmit()" 
+    <button mat-raised-button color="primary" (click)="onSubmit()"
       [disabled]="applicationForm.invalid || isSubmitting() || resumeUploading">
       @if (isSubmitting()) {
       <mat-spinner diameter="20" class="button-spinner"></mat-spinner>

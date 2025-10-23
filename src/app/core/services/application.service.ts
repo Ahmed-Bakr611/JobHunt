@@ -120,17 +120,48 @@ export class ApplicationService {
   /**
    * Load applications for the current user
    */
+  // async loadMyApplications(): Promise<void> {
+  //   try {
+  //     this.loadingSignal.set(true);
+  //     this.errorSignal.set(null);
+
+  //     const userId = this.authService.userId();
+  //     if (!userId) {
+  //       throw new Error('User not authenticated');
+  //     }
+
+  //     const response = await firstValueFrom(this.crudService.getAll(COLLECTIONS.Applications));
+
+  //     if (response.success && Array.isArray(response.data)) {
+  //       const userApplications = response.data.filter((app) => app.seekerId === userId);
+  //       this.applicationsSignal.set(userApplications);
+  //       console.log('✅ Applications loaded:', userApplications.length);
+  //     } else {
+  //       throw new Error(response.error || 'Failed to load applications');
+  //     }
+  //   } catch (error: unknown) {
+  //     const message = this.getErrorMessage(error, 'Failed to load applications');
+  //     this.errorSignal.set(message);
+  //     console.error('Error loading applications:', error);
+  //   } finally {
+  //     this.loadingSignal.set(false);
+  //   }
+  // }
   async loadMyApplications(): Promise<void> {
     try {
+      console.log('🔹 Start loading applications');
       this.loadingSignal.set(true);
       this.errorSignal.set(null);
 
       const userId = this.authService.userId();
       if (!userId) {
+        console.warn('🚫 No user ID found');
         throw new Error('User not authenticated');
       }
 
       const response = await firstValueFrom(this.crudService.getAll(COLLECTIONS.Applications));
+
+      console.log('✅ Firestore response received:', response);
 
       if (response.success && Array.isArray(response.data)) {
         const userApplications = response.data.filter((app) => app.seekerId === userId);
@@ -139,11 +170,11 @@ export class ApplicationService {
       } else {
         throw new Error(response.error || 'Failed to load applications');
       }
-    } catch (error: unknown) {
-      const message = this.getErrorMessage(error, 'Failed to load applications');
-      this.errorSignal.set(message);
-      console.error('Error loading applications:', error);
+    } catch (error) {
+      console.error('❌ Error loading applications:', error);
+      this.errorSignal.set(this.getErrorMessage(error, 'Failed to load applications'));
     } finally {
+      console.log('🔹 Load complete');
       this.loadingSignal.set(false);
     }
   }

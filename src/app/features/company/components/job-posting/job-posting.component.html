@@ -30,6 +30,17 @@
           </div>
 
           <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Company Name</mat-label>
+              <input matInput formControlName="companyName" placeholder="e.g., Tech Corp" required>
+              <mat-icon matPrefix>business</mat-icon>
+              <mat-error *ngIf="basicInfoForm.get('companyName')?.hasError('required')">
+                Company name is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
             <mat-form-field appearance="outline" class="half-width">
               <mat-label>Job Type</mat-label>
               <mat-select formControlName="type" required>
@@ -51,22 +62,22 @@
             </mat-form-field>
           </div>
 
-          <div class="form-row">
+          <div class="form-row" formGroupName="location">
             <mat-form-field appearance="outline" class="half-width">
               <mat-label>City</mat-label>
-              <input matInput formControlName="location.city" placeholder="e.g., New York" required>
+              <input matInput formControlName="city" placeholder="e.g., New York" required>
               <mat-icon matPrefix>location_on</mat-icon>
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="half-width">
               <mat-label>Country</mat-label>
-              <input matInput formControlName="location.country" placeholder="e.g., United States" required>
+              <input matInput formControlName="country" placeholder="e.g., United States" required>
             </mat-form-field>
           </div>
 
-          <div class="checkbox-row">
-            <mat-checkbox formControlName="location.remote">Remote work allowed</mat-checkbox>
-            <mat-checkbox formControlName="location.hybrid">Hybrid work option</mat-checkbox>
+          <div class="checkbox-row" formGroupName="location">
+            <mat-checkbox formControlName="remote">Remote work allowed</mat-checkbox>
+            <mat-checkbox formControlName="hybrid">Hybrid work option</mat-checkbox>
           </div>
 
           <div class="step-actions">
@@ -132,24 +143,39 @@
           <mat-divider></mat-divider>
           <h3>Salary Information (Optional)</h3>
 
-          <div class="form-row">
-            <mat-form-field appearance="outline" class="third-width">
-              <mat-label>Min Salary</mat-label>
-              <input matInput type="number" formControlName="salary.min" min="0">
-            </mat-form-field>
+          <div formGroupName="salary">
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="third-width">
+                <mat-label>Min Salary</mat-label>
+                <input matInput type="number" formControlName="min" min="0">
+                <mat-icon matPrefix>attach_money</mat-icon>
+              </mat-form-field>
 
-            <mat-form-field appearance="outline" class="third-width">
-              <mat-label>Max Salary</mat-label>
-              <input matInput type="number" formControlName="salary.max" min="0">
-            </mat-form-field>
+              <mat-form-field appearance="outline" class="third-width">
+                <mat-label>Max Salary</mat-label>
+                <input matInput type="number" formControlName="max" min="0">
+                <mat-icon matPrefix>attach_money</mat-icon>
+              </mat-form-field>
 
-            <mat-form-field appearance="outline" class="third-width">
-              <mat-label>Currency</mat-label>
-              <mat-select formControlName="salary.currency">
-                <mat-option value="USD">USD</mat-option>
-                <mat-option value="EUR">EUR</mat-option>
-                <mat-option value="GBP">GBP</mat-option>
+              <mat-form-field appearance="outline" class="third-width">
+                <mat-label>Currency</mat-label>
+                <mat-select formControlName="currency">
+                  <mat-option value="USD">USD</mat-option>
+                  <mat-option value="EUR">EUR</mat-option>
+                  <mat-option value="GBP">GBP</mat-option>
+                </mat-select>
+                <mat-icon matPrefix>payments</mat-icon>
+              </mat-form-field>
+            </div>
+
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Salary Period</mat-label>
+              <mat-select formControlName="period">
+                <mat-option value="yearly">Per Year</mat-option>
+                <mat-option value="monthly">Per Month</mat-option>
+                <mat-option value="hourly">Per Hour</mat-option>
               </mat-select>
+              <mat-icon matPrefix>schedule</mat-icon>
             </mat-form-field>
           </div>
 
@@ -231,7 +257,7 @@
             <p class="company-name">{{ basicInfoForm.get('companyName')?.value }}</p>
 
             <div class="job-meta">
-              <mat-chip>{{ getJobTypeLabel(detailsForm.get('type')?.value) }}</mat-chip>
+              <mat-chip>{{ getJobTypeLabel(basicInfoForm.get('type')?.value) }}</mat-chip>
               <mat-chip>{{ basicInfoForm.get('category')?.value }}</mat-chip>
               <mat-chip>{{ getExperienceLabel(detailsForm.get('experienceLevel')?.value || 'entry') }}</mat-chip>
             </div>
