@@ -1,76 +1,130 @@
 # 🚀 JobHunt (aka _Jobly_)
 
-A modern **job marketplace platform** built with **Angular + Firebase**, designed for both job seekers and companies.  
-It provides a smooth, real-time experience with authentication, job listings, applications, and company dashboards.
+A modern **job marketplace platform** built with **Angular + Firebase**, designed for both job seekers and companies. It provides a smooth, real-time experience with authentication, job listings, applications, and company dashboards.
 
 ---
 
 ## 📂 Project Structure
 
+```
 jobHunt/
 ├── src/
-│ ├── app/
-│ │ ├── core/ # Singleton services, guards, interceptors
-│ │ ├── shared/ # Reusable components, directives, pipes, models
-│ │ ├── features/ # Feature modules (auth, jobs, applications, company, profile)
-│ │ ├── app.component.ts
-│ │ ├── app.routes.ts
-│ │ └── app.config.ts
-│ ├── assets/
-│ ├── environments/
-│ │ ├── environment.ts
-│ │ └── environment.development.ts
-│ └── styles.css
+│   ├── app/
+│   │   ├── core/              # Singleton services, guards, interceptors
+│   │   ├── shared/            # Reusable components, directives, pipes, models
+│   │   ├── features/          # Feature modules (auth, jobs, applications, company, profile)
+│   │   ├── app.component.ts
+│   │   ├── app.routes.ts
+│   │   └── app.config.ts
+│   ├── assets/
+│   ├── environments/
+│   │   ├── environment.ts
+│   │   └── environment.development.ts
+│   └── styles.css
+└── ...
+```
 
-bash
-Copy code
+### Core Directory
 
-### 🔑 Firebase Data Structure
+```
+core/
+├── services/
+│   ├── auth.service.ts
+│   ├── profile.service.ts
+│   ├── cloudinary.service.ts
+│   └── form-change-detection.service.ts
+├── guards/
+│   ├── auth.guard.ts
+│   └── role.guard.ts
+├── interceptors/
+│   └── http-error.interceptor.ts
+└── models/
+    └── user.model.ts
+```
 
+### Shared Directory
+
+```
+shared/
+├── components/
+│   ├── header/
+│   ├── footer/
+│   └── loader/
+├── directives/
+├── pipes/
+└── models/
+    └── user.model.ts
+```
+
+### Features Directory
+
+```
+features/
+├── auth/
+│   ├── login/
+│   ├── register/
+│   └── role-selection/
+├── profile/
+│   ├── profile-view/
+│   └── profile-edit/
+├── jobs/
+│   ├── job-list/
+│   ├── job-details/
+│   └── job-search/
+├── applications/
+│   └── application-list/
+└── company/
+    ├── company-dashboard/
+    └── job-post/
+```
+
+---
+
+## 🔑 Firebase Data Structure
+
+```
 jobHunt-firebase/
 ├── users/{userId}
-│ ├── email
-│ ├── role: 'seeker' | 'company'
-│ ├── displayName
-│ ├── photoURL
-│ ├── createdAt
-│ └── profile { ...role-specific data }
-
+│   ├── email
+│   ├── role: 'seeker' | 'company'
+│   ├── displayName
+│   ├── photoURL
+│   ├── createdAt
+│   └── profile { ...role-specific data }
+│
 ├── jobs/{jobId}
-│ ├── companyId
-│ ├── title, description, requirements[]
-│ ├── location
-│ ├── salary { min, max, currency }
-│ ├── type: 'full-time' | 'part-time' | 'contract'
-│ ├── category
-│ ├── status: 'active' | 'closed'
-│ ├── createdAt, updatedAt
-
+│   ├── companyId
+│   ├── title, description, requirements[]
+│   ├── location
+│   ├── salary { min, max, currency }
+│   ├── type: 'full-time' | 'part-time' | 'contract'
+│   ├── category
+│   ├── status: 'active' | 'closed'
+│   ├── createdAt, updatedAt
+│
 └── applications/{applicationId}
-├── jobId, seekerId, companyId
-├── status: 'pending' | 'reviewing' | 'accepted' | 'rejected'
-├── resumeURL, coverLetter
-├── appliedAt, updatedAt
-
-markdown
-Copy code
+    ├── jobId, seekerId, companyId
+    ├── status: 'pending' | 'reviewing' | 'accepted' | 'rejected'
+    ├── resumeURL, coverLetter
+    ├── appliedAt, updatedAt
+```
 
 ---
 
 ## 🎨 Angular Material Components Used
 
-- **MatToolbar** → Navigation header
-- **MatSidenav** → Side navigation
-- **MatCard** → Job & applicant cards
-- **MatTable** → Applicants list
-- **MatPaginator** → Job listing pagination
-- **MatFormField / MatSelect / MatChip** → Forms & filters
-- **MatDialog** → Application forms, confirmations
-- **MatSnackBar** → Notifications
-- **MatBadge** → Notification counts
-- **MatTabs** → Company dashboard sections
-- **MatExpansionPanel** → Job details accordion
-- **MatButton** → All buttons
+- **MatToolbar** — Navigation header
+- **MatSidenav** — Side navigation
+- **MatCard** — Job & applicant cards
+- **MatTable** — Applicants list
+- **MatPaginator** — Job listing pagination
+- **MatFormField / MatSelect / MatChip** — Forms & filters
+- **MatDialog** — Application forms, confirmations
+- **MatSnackBar** — Notifications
+- **MatBadge** — Notification counts
+- **MatTabs** — Company dashboard sections
+- **MatExpansionPanel** — Job details accordion
+- **MatButton** — All buttons
 
 ---
 
@@ -140,13 +194,13 @@ Copy code
 
 Use **imperative verbs** with Conventional Commit style:
 
-- **Add** → `add login feature`
-- **Fix** → `fix crash in job service`
-- **Update** → `update dependencies`
-- **Remove** → `remove unused imports`
-- **Refactor** → `refactor auth module`
-- **Improve** → `improve error handling`
-- **Change** → `change default port to 3000`
+- **Add** — `add login feature`
+- **Fix** — `fix crash in job service`
+- **Update** — `update dependencies`
+- **Remove** — `remove unused imports`
+- **Refactor** — `refactor auth module`
+- **Improve** — `improve error handling`
+- **Change** — `change default port to 3000`
 
 ---
 
